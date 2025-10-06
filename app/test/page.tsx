@@ -1,4 +1,4 @@
-import PoseDetector from "@/components/pose/PoseDetector";
+import PoseDetector from "@/components/pose-detector/PoseDetector";
 
 export default function TestPage() {
   return (
