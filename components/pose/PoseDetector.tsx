@@ -13,7 +13,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Camera, CameraOff, Activity } from "lucide-react";
-import { calculateAllAngles } from "@/lib/medaipipe/angle-calculator";
+import {
+  calculateAllAngles,
+  resetAngleHistory,
+} from "@/lib/medaipipe/angle-calculator";
 import { JointAngles } from "@/types/pose";
 
 export default function PoseDetector() {
@@ -54,6 +57,7 @@ export default function PoseDetector() {
     if (animationRef.current) {
       cancelAnimationFrame(animationRef.current);
     }
+    resetAngleHistory();
   };
 
   // 포즈 감지 루프
