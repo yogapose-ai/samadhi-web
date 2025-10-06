@@ -4,7 +4,9 @@ import { PoseLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
 export function useMediaPipe() {
   const [isInitialized, setIsInitialized] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const landmarkerRef = useRef<PoseLandmarker | null>(null);
+
+  const liveLandmarkerRef = useRef<PoseLandmarker | null>(null);
+  const imageLandmarkerRef = useRef<PoseLandmarker | null>(null);
 
   useEffect(() => {
     async function initMediaPipe() {
@@ -13,20 +15,30 @@ export function useMediaPipe() {
           "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
         );
 
-        const landmarker = await PoseLandmarker.createFromOptions(vision, {
+        const options = {
           baseOptions: {
             modelAssetPath: "/models/pose_landmarker_full.task",
-            delegate: "GPU",
+            delegate: "GPU" as "GPU" | "CPU",
           },
-          runningMode: "VIDEO",
           numPoses: 1,
           minPoseDetectionConfidence: 0.5,
           minPosePresenceConfidence: 0.5,
           minTrackingConfidence: 0.5,
           outputSegmentationMasks: false,
+        };
+
+        const liveLandmarker = await PoseLandmarker.createFromOptions(vision, {
+          ...options,
+          runningMode: "VIDEO",
         });
 
-        landmarkerRef.current = landmarker;
+        const imageLandmarker = await PoseLandmarker.createFromOptions(vision, {
+          ...options,
+          runningMode: "IMAGE",
+        });
+
+        liveLandmarkerRef.current = liveLandmarker;
+        imageLandmarkerRef.current = imageLandmarker;
         setIsInitialized(true);
         console.log("✅ MediaPipe initialized");
       } catch (err) {
@@ -40,12 +52,14 @@ export function useMediaPipe() {
     initMediaPipe();
 
     return () => {
-      landmarkerRef.current?.close();
+      liveLandmarkerRef.current?.close();
+      imageLandmarkerRef.current?.close();
     };
   }, []);
 
   return {
-    landmarker: landmarkerRef.current,
+    liveLandmarker: liveLandmarkerRef.current,
+    imageLandmarker: imageLandmarkerRef.current,
     isInitialized,
     error,
   };

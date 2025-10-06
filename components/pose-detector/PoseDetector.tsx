@@ -12,9 +12,9 @@ import { PoseCanvas } from "./ui/PoseCanvas";
 export default function PoseDetector() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const { landmarker, isInitialized, error: mpError } = useMediaPipe();
+  const { liveLandmarker, isInitialized, error: mpError } = useMediaPipe();
   const { isActive, error: webcamError, startWebcam, stopWebcam } = useWebcam();
-  const { webcamAngles, webcamFps } = usePoseStore();
+  const { webcam } = usePoseStore();
 
   // 웹캠 시작 핸들러
   const handleStart = async () => {
@@ -36,7 +36,7 @@ export default function PoseDetector() {
       <WebcamControls
         isActive={isActive}
         isInitialized={isInitialized}
-        webcamFps={webcamFps}
+        webcamFps={webcam.fps}
         onStart={handleStart}
         onStop={handleStop}
       />
@@ -51,10 +51,10 @@ export default function PoseDetector() {
         videoRef={videoRef}
         isActive={isActive}
         isInitialized={isInitialized}
-        landmarker={landmarker}
+        landmarker={liveLandmarker}
       />
 
-      <AngleDisplayCard webcamAngles={webcamAngles} />
+      <AngleDisplayCard webcamAngles={webcam.angles} />
     </div>
   );
 }
