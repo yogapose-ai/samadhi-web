@@ -8,18 +8,31 @@ import { ImageCanvas } from "./ui/ImageCanvas";
 import { AngleDisplayCard } from "@/components/pose-detector/ui/AngleDisplayCard";
 import { ImageClassifier } from "@/components/classifier/ImageClassifier";
 
+
+// 샘플 이미지 목록 (public/images 폴더)
+const SAMPLE_IMAGES = [
+  {
+    name: "Tree",
+    path: "/images/tree_pose.png",
+  },
+];
+
 export default function ImageDetector() {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { imageLandmarker, isInitialized, error: mpError } = useMediaPipe();
+  const { imageLandmarker, isInitialized } = useMediaPipe();
   const { image, resetImage } = usePoseStore();
+
+  const isRevocableUrl = (src: string) => src && src.startsWith("blob:");
 
   const handleFileChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (file) {
-        if (imageSrc) URL.revokeObjectURL(imageSrc);
+        if (imageSrc && isRevocableUrl(imageSrc)) {
+          URL.revokeObjectURL(imageSrc);
+        }
         const url = URL.createObjectURL(file);
         setImageSrc(url);
         resetImage();
@@ -28,8 +41,23 @@ export default function ImageDetector() {
     [imageSrc, resetImage]
   );
 
+  const handleSampleSelect = useCallback(
+    (path: string) => {
+      if (imageSrc && isRevocableUrl(imageSrc)) {
+        URL.revokeObjectURL(imageSrc);
+      }
+      setImageSrc(path);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    },
+    [imageSrc]
+  );
+
   const handleReset = useCallback(() => {
-    if (imageSrc) URL.revokeObjectURL(imageSrc);
+    if (imageSrc && isRevocableUrl(imageSrc)) {
+      URL.revokeObjectURL(imageSrc);
+    }
     setImageSrc(null);
     resetImage();
     if (fileInputRef.current) {
@@ -39,15 +67,21 @@ export default function ImageDetector() {
 
   useEffect(() => {
     return () => {
-      if (imageSrc) URL.revokeObjectURL(imageSrc);
+      if (imageSrc && isRevocableUrl(imageSrc)) {
+        URL.revokeObjectURL(imageSrc);
+      }
     };
   }, [imageSrc]);
 
-  const error = mpError;
-
   return (
     <div className='w-full space-y-4'>
-      <h2 className='text-2xl font-semibold'>단일 이미지 포즈 감지</h2>
+      <ImageCanvas
+        imageSrc={imageSrc}
+        isInitialized={isInitialized}
+        landmarker={imageLandmarker}
+      />
+
+      <AngleDisplayCard angles={image.angles} />
 
       <ImageControls
         onFileChange={handleFileChange}
@@ -55,6 +89,9 @@ export default function ImageDetector() {
         isInitialized={isInitialized}
         imageLoaded={!!imageSrc}
         fileInputRef={fileInputRef}
+        sampleImages={SAMPLE_IMAGES}
+        onSampleSelect={handleSampleSelect}
+        currentImageSrc={imageSrc}
       />
 
       {error && (

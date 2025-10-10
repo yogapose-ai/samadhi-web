@@ -8,7 +8,7 @@ import { calculateAllAngles } from "@/lib/medaipipe/angle-calculator";
 import { usePoseStore } from "@/store/poseStore";
 import { JointAngles } from "@/types/pose";
 
-interface UsePoseCanvasProps {
+interface UseWebcamCanvasProps {
   videoRef: React.RefObject<HTMLVideoElement | null>;
   isActive: boolean;
   isInitialized: boolean;
@@ -22,77 +22,29 @@ const drawSkeleton = (
 ) => {
   const drawingUtils = new DrawingUtils(ctx);
 
-  // 연결선
   drawingUtils.drawConnectors(landmarks, PoseLandmarker.POSE_CONNECTIONS, {
     color: "#00FF00",
-    lineWidth: 4,
+    lineWidth: 3,
   });
 
-  // 랜드마크 포인트
   drawingUtils.drawLandmarks(landmarks, {
-    color: "#FF0000",
-    radius: 5,
-    fillColor: "#FF0000",
+    color: "#FFFFFF",
+    radius: 3,
+    fillColor: "#FFFFFF",
   });
 };
 
-// 각도 표시
-const drawAngles = (ctx: CanvasRenderingContext2D, angles: JointAngles) => {
-  ctx.fillStyle = "#FFFFFF";
-  ctx.strokeStyle = "#000000";
-  ctx.lineWidth = 3;
-  ctx.font = "bold 16px Arial";
-
-  const col1 = [
-    `L Elbow: ${angles.leftElbow.toFixed(1)}°`,
-    `R Elbow: ${angles.rightElbow.toFixed(1)}°`,
-    `L Shoulder: ${angles.leftShoulder.toFixed(1)}°`,
-    `R Shoulder: ${angles.rightShoulder.toFixed(1)}°`,
-    `L Wrist: ${angles.leftWrist.toFixed(1)}°`,
-    `R Wrist: ${angles.rightWrist.toFixed(1)}°`,
-    `Spine: ${angles.spine.toFixed(1)}°`,
-    `L Align: ${angles.leftHipShoulderAlign.toFixed(1)}°`,
-    `R Align: ${angles.rightHipShoulderAlign.toFixed(1)}°`,
-  ];
-
-  const col2 = [
-    `L Hip: ${angles.leftHip.toFixed(1)}°`,
-    `R Hip: ${angles.rightHip.toFixed(1)}°`,
-    `L Knee: ${angles.leftKnee.toFixed(1)}°`,
-    `R Knee: ${angles.rightKnee.toFixed(1)}°`,
-    `L Ankle: ${angles.leftAnkle.toFixed(1)}°`,
-    `R Ankle: ${angles.rightAnkle.toFixed(1)}°`,
-    `Neck: ${angles.neckAngle.toFixed(1)}°`,
-  ];
-
-  const col1X = 20;
-  const col2X = 180;
-  const lineHeight = 25;
-
-  col1.forEach((text, i) => {
-    const y = 30 + i * lineHeight;
-    ctx.strokeText(text, col1X, y);
-    ctx.fillText(text, col1X, y);
-  });
-
-  col2.forEach((text, i) => {
-    const y = 30 + i * lineHeight;
-    ctx.strokeText(text, col2X, y);
-    ctx.fillText(text, col2X, y);
-  });
-};
-
-export function usePoseCanvas({
+export function useWebcamCanvas({
   videoRef,
   isActive,
   isInitialized,
   landmarker,
-}: UsePoseCanvasProps) {
+}: UseWebcamCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>(0);
   const lastFrameTime = useRef<number>(0);
 
-  const { setWebcamData } = usePoseStore();
+  const { webcam, setWebcamData, setPreviousAngles } = usePoseStore();
 
   // 포즈 감지 루프
   const detectLoop = useCallback(() => {
@@ -130,7 +82,11 @@ export function usePoseCanvas({
 
         if (worldLandmarks) {
           // 각도 계산
-          const angles = calculateAllAngles(worldLandmarks);
+          const angles = calculateAllAngles(
+            worldLandmarks,
+            webcam.previousAngles,
+            (angles: JointAngles) => setPreviousAngles("webcam", angles)
+          );
 
           // FPS 계산
           const fps = lastFrameTime.current
@@ -143,9 +99,6 @@ export function usePoseCanvas({
 
           // 스켈레톤 그리기
           drawSkeleton(ctx, landmarks);
-
-          // 각도 표시
-          drawAngles(ctx, angles);
 
           // 캔버스 중앙 상단에 감지 성공 메시지 표시
           ctx.fillStyle = "#00FF00";

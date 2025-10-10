@@ -5,6 +5,7 @@ const createSourceState = () => ({
   landmarks: null as Landmark[] | null,
   angles: null as JointAngles | null,
   fps: 0 as number,
+  previousAngles: {} as Partial<JointAngles>,
 });
 
 interface PoseStore {
@@ -13,6 +14,14 @@ interface PoseStore {
 
   // 이미지 데이터
   image: ReturnType<typeof createSourceState>;
+
+  // 영상 데이터
+  video: ReturnType<typeof createSourceState>;
+
+  setPreviousAngles: (
+    source: "webcam" | "video" | "image",
+    angles: Partial<JointAngles>
+  ) => void;
 
   setWebcamData: (
     landmarks: Landmark[],
@@ -26,34 +35,56 @@ interface PoseStore {
     fps: number
   ) => void;
 
+  setVideoData: (
+    landmarks: Landmark[],
+    angles: JointAngles,
+    fps: number
+  ) => void;
+
   resetAllData: () => void;
-  resetImage: () => void;
   resetWebcam: () => void;
+  resetImage: () => void;
+  resetVideo: () => void;
 }
 
 const initialState: Omit<
   PoseStore,
+  | "setPreviousAngles"
   | "setWebcamData"
   | "setImageData"
+  | "setVideoData"
   | "resetAllData"
   | "resetImage"
   | "resetWebcam"
+  | "resetVideo"
 > = {
   webcam: createSourceState(),
   image: createSourceState(),
+  video: createSourceState(),
 };
 
 export const usePoseStore = create<PoseStore>((set) => ({
   ...initialState,
 
+  setPreviousAngles: (source, angles) =>
+    set((state) => ({
+      [source]: { ...state[source], previousAngles: angles },
+    })),
+
   setWebcamData: (landmarks, angles, fps) =>
-    set((state) => ({ webcam: { landmarks, angles, fps } })),
+    set((state) => ({
+      webcam: { landmarks, angles, fps, previousAngles: {} },
+    })),
 
   setImageData: (landmarks, angles, fps) =>
-    set((state) => ({ image: { landmarks, angles, fps } })),
+    set((state) => ({ image: { landmarks, angles, fps, previousAngles: {} } })),
+
+  setVideoData: (landmarks, angles, fps) =>
+    set((state) => ({ video: { landmarks, angles, fps, previousAngles: {} } })),
 
   resetImage: () => set({ image: createSourceState() }),
   resetWebcam: () => set({ webcam: createSourceState() }),
+  resetVideo: () => set({ video: createSourceState() }),
 
   resetAllData: () => set(initialState),
 }));

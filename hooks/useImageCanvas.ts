@@ -6,7 +6,7 @@ import {
 } from "@mediapipe/tasks-vision";
 import { calculateAllAngles } from "@/lib/medaipipe/angle-calculator";
 import { usePoseStore } from "@/store/poseStore";
-import type { Landmark, JointAngles } from "@/types/pose";
+import type { JointAngles, Landmark } from "@/types/pose";
 
 const drawSkeleton = (
   ctx: CanvasRenderingContext2D,
@@ -17,75 +17,29 @@ const drawSkeleton = (
   // 연결선
   drawingUtils.drawConnectors(landmarks, PoseLandmarker.POSE_CONNECTIONS, {
     color: "#00FF00",
-    lineWidth: 4,
+    lineWidth: 3,
   });
 
   // 랜드마크 포인트
   drawingUtils.drawLandmarks(landmarks, {
-    color: "#FF0000",
-    radius: 5,
-    fillColor: "#FF0000",
+    color: "#FFFFFF",
+    radius: 3,
+    fillColor: "#FFFFFF",
   });
 };
 
-// 각도 표시
-const drawAngles = (ctx: CanvasRenderingContext2D, angles: JointAngles) => {
-  ctx.fillStyle = "#FFFFFF";
-  ctx.strokeStyle = "#000000";
-  ctx.lineWidth = 3;
-  ctx.font = "bold 16px Arial";
-
-  const col1 = [
-    `L Elbow: ${angles.leftElbow.toFixed(1)}°`,
-    `R Elbow: ${angles.rightElbow.toFixed(1)}°`,
-    `L Shoulder: ${angles.leftShoulder.toFixed(1)}°`,
-    `R Shoulder: ${angles.rightShoulder.toFixed(1)}°`,
-    `L Wrist: ${angles.leftWrist.toFixed(1)}°`,
-    `R Wrist: ${angles.rightWrist.toFixed(1)}°`,
-    `Spine: ${angles.spine.toFixed(1)}°`,
-    `L Align: ${angles.leftHipShoulderAlign.toFixed(1)}°`,
-    `R Align: ${angles.rightHipShoulderAlign.toFixed(1)}°`,
-  ];
-
-  const col2 = [
-    `L Hip: ${angles.leftHip.toFixed(1)}°`,
-    `R Hip: ${angles.rightHip.toFixed(1)}°`,
-    `L Knee: ${angles.leftKnee.toFixed(1)}°`,
-    `R Knee: ${angles.rightKnee.toFixed(1)}°`,
-    `L Ankle: ${angles.leftAnkle.toFixed(1)}°`,
-    `R Ankle: ${angles.rightAnkle.toFixed(1)}°`,
-    `Neck: ${angles.neckAngle.toFixed(1)}°`,
-  ];
-
-  const col1X = 20;
-  const col2X = 180;
-  const lineHeight = 25;
-
-  col1.forEach((text, i) => {
-    const y = 30 + i * lineHeight;
-    ctx.strokeText(text, col1X, y);
-    ctx.fillText(text, col1X, y);
-  });
-
-  col2.forEach((text, i) => {
-    const y = 30 + i * lineHeight;
-    ctx.strokeText(text, col2X, y);
-    ctx.fillText(text, col2X, y);
-  });
-};
-
-interface UseImagePoseCanvasProps {
+interface UseImageCanvasProps {
   isInitialized: boolean;
   landmarker: PoseLandmarker | null;
 }
 
-export function useImagePoseCanvas({
+export function useImageCanvas({
   isInitialized,
   landmarker,
-}: UseImagePoseCanvasProps) {
+}: UseImageCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
-  const { setImageData } = usePoseStore();
+  const { image, setImageData, setPreviousAngles } = usePoseStore();
 
   // 단일 이미지 감지 및 렌더링
   const processImage = useCallback(
@@ -117,9 +71,12 @@ export function useImagePoseCanvas({
         drawSkeleton(ctx, landmarks);
 
         if (worldLandmarks) {
-          const angles = calculateAllAngles(worldLandmarks);
+          const angles = calculateAllAngles(
+            worldLandmarks,
+            image.previousAngles,
+            (angles: JointAngles) => setPreviousAngles("image", angles)
+          );
           setImageData(landmarks as Landmark[], angles, fps);
-          drawAngles(ctx, angles);
         }
       } else {
         ctx.fillStyle = "#FF0000";
