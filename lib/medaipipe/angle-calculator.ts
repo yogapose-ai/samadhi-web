@@ -33,8 +33,6 @@ export const LANDMARK_INDICES = {
 const MIN_VISIBILITY = 0.5; // visibility 임계값
 const DEAD_ZONE = 2.0; // 2도 이하 변화는 무시
 
-const previousAngles: Partial<JointAngles> = {};
-
 /**
  * 3D 공간에서 3점으로 각도 계산
  */
@@ -77,11 +75,16 @@ function calculateAngle3D(
 /**
  * 데드존 필터 적용
  */
-function applyDeadZone(key: keyof JointAngles, newAngle: number): number {
+function applyDeadZone(
+  key: keyof JointAngles,
+  newAngle: number,
+  previousAngles: Partial<JointAngles>,
+  updatePreviousAngles: (key: keyof JointAngles, angle: number) => void
+): number {
   const prevAngle = previousAngles[key];
 
-  if (prevAngle === undefined) {
-    previousAngles[key] = newAngle;
+  if (prevAngle === undefined || Object.keys(previousAngles).length === 0) {
+    updatePreviousAngles(key, newAngle);
     return newAngle;
   }
 
@@ -93,7 +96,7 @@ function applyDeadZone(key: keyof JointAngles, newAngle: number): number {
   }
 
   // 변화가 크면 새 값으로 업데이트
-  previousAngles[key] = newAngle;
+  updatePreviousAngles(key, newAngle);
   return newAngle;
 }
 
@@ -104,16 +107,18 @@ function calcAngle(
   key: keyof JointAngles,
   a: Landmark,
   b: Landmark,
-  c: Landmark
+  c: Landmark,
+  prevAngles: Partial<JointAngles>,
+  updatePrevAngles: (key: keyof JointAngles, angle: number) => void
 ): number {
   const angle = calculateAngle3D(a, b, c);
 
   if (angle === null) {
     // visibility 낮으면 이전 값 유지
-    return previousAngles[key] ?? 0;
+    return prevAngles[key] ?? 0;
   }
 
-  return applyDeadZone(key, angle);
+  return applyDeadZone(key, angle, prevAngles, updatePrevAngles);
 }
 
 /**
@@ -131,10 +136,22 @@ function getMidpoint(a: Landmark, b: Landmark): Landmark {
 /**
  * 모든 주요 관절 각도 계산
  */
-export function calculateAllAngles(landmarks: Landmark[]): JointAngles {
+export function calculateAllAngles(
+  landmarks: Landmark[],
+  currentPreviousAngles: Partial<JointAngles>,
+  setAllPreviousAngles: (angles: JointAngles) => void
+): JointAngles {
   if (landmarks.length < 33) {
     throw new Error("Invalid landmarks: expected 33 points");
   }
+
+  const calculatedAngles: JointAngles = {} as JointAngles;
+
+  const tempPreviousAngles = { ...currentPreviousAngles } as JointAngles;
+
+  const updatePrevious = (key: keyof JointAngles, angle: number) => {
+    tempPreviousAngles[key] = angle;
+  };
 
   const centerShoulder = getMidpoint(
     landmarks[LANDMARK_INDICES.LEFT_SHOULDER],
@@ -149,143 +166,172 @@ export function calculateAllAngles(landmarks: Landmark[]): JointAngles {
     landmarks[LANDMARK_INDICES.RIGHT_KNEE]
   );
 
-  return {
-    /*------------ 팔 ------------*/
-    // 왼쪽 팔꿈치: 어깨(11) - 팔꿈치(13) - 손목(15)
-    leftElbow: calcAngle(
-      "leftElbow",
-      landmarks[LANDMARK_INDICES.LEFT_SHOULDER],
-      landmarks[LANDMARK_INDICES.LEFT_ELBOW],
-      landmarks[LANDMARK_INDICES.LEFT_WRIST]
-    ),
+  /*------------ 팔 ------------*/
+  // 왼쪽 팔꿈치: 어깨(11) - 팔꿈치(13) - 손목(15)
+  calculatedAngles.leftElbow = calcAngle(
+    "leftElbow",
+    landmarks[LANDMARK_INDICES.LEFT_SHOULDER],
+    landmarks[LANDMARK_INDICES.LEFT_ELBOW],
+    landmarks[LANDMARK_INDICES.LEFT_WRIST],
+    tempPreviousAngles,
+    updatePrevious
+  );
 
-    // 오른쪽 팔꿈치: 어깨(12) - 팔꿈치(14) - 손목(16)
-    rightElbow: calcAngle(
-      "rightElbow",
-      landmarks[LANDMARK_INDICES.RIGHT_SHOULDER],
-      landmarks[LANDMARK_INDICES.RIGHT_ELBOW],
-      landmarks[LANDMARK_INDICES.RIGHT_WRIST]
-    ),
+  // 오른쪽 팔꿈치: 어깨(12) - 팔꿈치(14) - 손목(16)
+  calculatedAngles.rightElbow = calcAngle(
+    "rightElbow",
+    landmarks[LANDMARK_INDICES.RIGHT_SHOULDER],
+    landmarks[LANDMARK_INDICES.RIGHT_ELBOW],
+    landmarks[LANDMARK_INDICES.RIGHT_WRIST],
+    tempPreviousAngles,
+    updatePrevious
+  );
 
-    // 왼쪽 어깨: 팔꿈치(13) - 어깨(11) - 골반(23)
-    leftShoulder: calcAngle(
-      "leftShoulder",
-      landmarks[LANDMARK_INDICES.LEFT_ELBOW],
-      landmarks[LANDMARK_INDICES.LEFT_SHOULDER],
-      landmarks[LANDMARK_INDICES.LEFT_HIP]
-    ),
+  // 왼쪽 어깨: 팔꿈치(13) - 어깨(11) - 골반(23)
+  calculatedAngles.leftShoulder = calcAngle(
+    "leftShoulder",
+    landmarks[LANDMARK_INDICES.LEFT_ELBOW],
+    landmarks[LANDMARK_INDICES.LEFT_SHOULDER],
+    landmarks[LANDMARK_INDICES.LEFT_HIP],
+    tempPreviousAngles,
+    updatePrevious
+  );
 
-    // 오른쪽 어깨: 팔꿈치(14) - 어깨(12) - 엉덩이(24)
-    rightShoulder: calcAngle(
-      "rightShoulder",
-      landmarks[LANDMARK_INDICES.RIGHT_ELBOW],
-      landmarks[LANDMARK_INDICES.RIGHT_SHOULDER],
-      landmarks[LANDMARK_INDICES.RIGHT_HIP]
-    ),
+  // 오른쪽 어깨: 팔꿈치(14) - 어깨(12) - 엉덩이(24)
+  calculatedAngles.rightShoulder = calcAngle(
+    "rightShoulder",
+    landmarks[LANDMARK_INDICES.RIGHT_ELBOW],
+    landmarks[LANDMARK_INDICES.RIGHT_SHOULDER],
+    landmarks[LANDMARK_INDICES.RIGHT_HIP],
+    tempPreviousAngles,
+    updatePrevious
+  );
 
-    /*------------ 다리 ------------*/
-    // 왼쪽 무릎: 골반(23) - 무릎(25) - 발목(27)
-    leftKnee: calcAngle(
-      "leftKnee",
-      landmarks[LANDMARK_INDICES.LEFT_HIP],
-      landmarks[LANDMARK_INDICES.LEFT_KNEE],
-      landmarks[LANDMARK_INDICES.LEFT_ANKLE]
-    ),
+  /*------------ 다리 ------------*/
+  // 왼쪽 무릎: 골반(23) - 무릎(25) - 발목(27)
+  calculatedAngles.leftKnee = calcAngle(
+    "leftKnee",
+    landmarks[LANDMARK_INDICES.LEFT_HIP],
+    landmarks[LANDMARK_INDICES.LEFT_KNEE],
+    landmarks[LANDMARK_INDICES.LEFT_ANKLE],
+    tempPreviousAngles,
+    updatePrevious
+  );
 
-    // 오른쪽 무릎: 엉덩이(24) - 무릎(26) - 발목(28)
-    rightKnee: calcAngle(
-      "rightKnee",
-      landmarks[LANDMARK_INDICES.RIGHT_HIP],
-      landmarks[LANDMARK_INDICES.RIGHT_KNEE],
-      landmarks[LANDMARK_INDICES.RIGHT_ANKLE]
-    ),
+  // 오른쪽 무릎: 엉덩이(24) - 무릎(26) - 발목(28)
+  calculatedAngles.rightKnee = calcAngle(
+    "rightKnee",
+    landmarks[LANDMARK_INDICES.RIGHT_HIP],
+    landmarks[LANDMARK_INDICES.RIGHT_KNEE],
+    landmarks[LANDMARK_INDICES.RIGHT_ANKLE],
+    tempPreviousAngles,
+    updatePrevious
+  );
 
-    // 왼쪽 엉덩이: 어깨(11) - 엉덩이(23) - 무릎(25)
-    leftHip: calcAngle(
-      "leftHip",
-      landmarks[LANDMARK_INDICES.LEFT_SHOULDER],
-      landmarks[LANDMARK_INDICES.LEFT_HIP],
-      landmarks[LANDMARK_INDICES.LEFT_KNEE]
-    ),
+  // 왼쪽 엉덩이: 어깨(11) - 엉덩이(23) - 무릎(25)
+  calculatedAngles.leftHip = calcAngle(
+    "leftHip",
+    landmarks[LANDMARK_INDICES.LEFT_SHOULDER],
+    landmarks[LANDMARK_INDICES.LEFT_HIP],
+    landmarks[LANDMARK_INDICES.LEFT_KNEE],
+    tempPreviousAngles,
+    updatePrevious
+  );
 
-    // 오른쪽 엉덩이: 어깨(12) - 엉덩이(24) - 무릎(26)
-    rightHip: calcAngle(
-      "rightHip",
-      landmarks[LANDMARK_INDICES.RIGHT_SHOULDER],
-      landmarks[LANDMARK_INDICES.RIGHT_HIP],
-      landmarks[LANDMARK_INDICES.RIGHT_KNEE]
-    ),
+  // 오른쪽 엉덩이: 어깨(12) - 엉덩이(24) - 무릎(26)
+  calculatedAngles.rightHip = calcAngle(
+    "rightHip",
+    landmarks[LANDMARK_INDICES.RIGHT_SHOULDER],
+    landmarks[LANDMARK_INDICES.RIGHT_HIP],
+    landmarks[LANDMARK_INDICES.RIGHT_KNEE],
+    tempPreviousAngles,
+    updatePrevious
+  );
 
-    /*------------ 몸통 ------------*/
-    // 척추: 어깨 중앙점 - 골반 중앙점 - 무릎 중앙점
-    spine: calcAngle("spine", centerShoulder, centerHip, centerKnee),
+  /*------------ 몸통 ------------*/
+  // 척추: 어깨 중앙점 - 골반 중앙점 - 무릎 중앙점
+  calculatedAngles.spine = calcAngle(
+    "spine",
+    centerShoulder,
+    centerHip,
+    centerKnee,
+    tempPreviousAngles,
+    updatePrevious
+  );
 
-    // 왼쪽 정렬: 어깨(11) - 엉덩이(23) - 오른쪽 엉덩이(24)
-    leftHipShoulderAlign: calcAngle(
-      "leftHipShoulderAlign",
-      landmarks[LANDMARK_INDICES.LEFT_SHOULDER],
-      landmarks[LANDMARK_INDICES.LEFT_HIP],
-      landmarks[LANDMARK_INDICES.RIGHT_HIP]
-    ),
+  // 왼쪽 정렬: 어깨(11) - 엉덩이(23) - 오른쪽 엉덩이(24)
+  calculatedAngles.leftHipShoulderAlign = calcAngle(
+    "leftHipShoulderAlign",
+    landmarks[LANDMARK_INDICES.LEFT_SHOULDER],
+    landmarks[LANDMARK_INDICES.LEFT_HIP],
+    landmarks[LANDMARK_INDICES.RIGHT_HIP],
+    tempPreviousAngles,
+    updatePrevious
+  );
 
-    // 오른쪽 정렬: 어깨(12) - 엉덩이(24) - 왼쪽 엉덩이(23)
-    rightHipShoulderAlign: calcAngle(
-      "rightHipShoulderAlign",
-      landmarks[LANDMARK_INDICES.RIGHT_SHOULDER],
-      landmarks[LANDMARK_INDICES.RIGHT_HIP],
-      landmarks[LANDMARK_INDICES.LEFT_HIP]
-    ),
+  // 오른쪽 정렬: 어깨(12) - 엉덩이(24) - 왼쪽 엉덩이(23)
+  calculatedAngles.rightHipShoulderAlign = calcAngle(
+    "rightHipShoulderAlign",
+    landmarks[LANDMARK_INDICES.RIGHT_SHOULDER],
+    landmarks[LANDMARK_INDICES.RIGHT_HIP],
+    landmarks[LANDMARK_INDICES.LEFT_HIP],
+    tempPreviousAngles,
+    updatePrevious
+  );
 
-    /*------------ 손목 ------------*/
-    // 왼쪽 손목: 팔꿈치(13) - 손목(15) - 손가락(19)
-    leftWrist: calcAngle(
-      "leftWrist",
-      landmarks[LANDMARK_INDICES.LEFT_ELBOW],
-      landmarks[LANDMARK_INDICES.LEFT_WRIST],
-      landmarks[LANDMARK_INDICES.LEFT_INDEX]
-    ),
+  /*------------ 손목 ------------*/
+  // 왼쪽 손목: 팔꿈치(13) - 손목(15) - 손가락(19)
+  calculatedAngles.leftWrist = calcAngle(
+    "leftWrist",
+    landmarks[LANDMARK_INDICES.LEFT_ELBOW],
+    landmarks[LANDMARK_INDICES.LEFT_WRIST],
+    landmarks[LANDMARK_INDICES.LEFT_INDEX],
+    tempPreviousAngles,
+    updatePrevious
+  );
 
-    // 오른쪽 손목: 팔꿈치(14) - 손목(16) - 손가락(20)
-    rightWrist: calcAngle(
-      "rightWrist",
-      landmarks[LANDMARK_INDICES.RIGHT_ELBOW],
-      landmarks[LANDMARK_INDICES.RIGHT_WRIST],
-      landmarks[LANDMARK_INDICES.RIGHT_INDEX]
-    ),
+  // 오른쪽 손목: 팔꿈치(14) - 손목(16) - 손가락(20)
+  calculatedAngles.rightWrist = calcAngle(
+    "rightWrist",
+    landmarks[LANDMARK_INDICES.RIGHT_ELBOW],
+    landmarks[LANDMARK_INDICES.RIGHT_WRIST],
+    landmarks[LANDMARK_INDICES.RIGHT_INDEX],
+    tempPreviousAngles,
+    updatePrevious
+  );
 
-    /*------------ 발목 ------------*/
-    // 왼쪽 발목: 무릎(25) - 발목(27) - 발뒤꿈치(29)
-    leftAnkle: calcAngle(
-      "leftAnkle",
-      landmarks[LANDMARK_INDICES.LEFT_KNEE],
-      landmarks[LANDMARK_INDICES.LEFT_ANKLE],
-      landmarks[LANDMARK_INDICES.LEFT_HEEL]
-    ),
+  /*------------ 발목 ------------*/
+  // 왼쪽 발목: 무릎(25) - 발목(27) - 발뒤꿈치(29)
+  calculatedAngles.leftAnkle = calcAngle(
+    "leftAnkle",
+    landmarks[LANDMARK_INDICES.LEFT_KNEE],
+    landmarks[LANDMARK_INDICES.LEFT_ANKLE],
+    landmarks[LANDMARK_INDICES.LEFT_HEEL],
+    tempPreviousAngles,
+    updatePrevious
+  );
 
-    // 오른쪽 발목: 무릎(26) - 발목(28) - 발뒤꿈치(30)
-    rightAnkle: calcAngle(
-      "rightAnkle",
-      landmarks[LANDMARK_INDICES.RIGHT_KNEE],
-      landmarks[LANDMARK_INDICES.RIGHT_ANKLE],
-      landmarks[LANDMARK_INDICES.RIGHT_HEEL]
-    ),
+  // 오른쪽 발목: 무릎(26) - 발목(28) - 발뒤꿈치(30)
+  calculatedAngles.rightAnkle = calcAngle(
+    "rightAnkle",
+    landmarks[LANDMARK_INDICES.RIGHT_KNEE],
+    landmarks[LANDMARK_INDICES.RIGHT_ANKLE],
+    landmarks[LANDMARK_INDICES.RIGHT_HEEL],
+    tempPreviousAngles,
+    updatePrevious
+  );
 
-    /*------------ 머리 위치 ------------*/
-    // 목 각도: 어깨(11) - 귀(7) - 코(0)
-    neckAngle: calcAngle(
-      "neckAngle",
-      landmarks[LANDMARK_INDICES.LEFT_SHOULDER],
-      landmarks[LANDMARK_INDICES.LEFT_EAR],
-      landmarks[LANDMARK_INDICES.NOSE]
-    ),
-  } as JointAngles;
-}
+  /*------------ 머리 위치 ------------*/
+  // 목 각도: 어깨(11) - 귀(7) - 코(0)
+  calculatedAngles.neckAngle = calcAngle(
+    "neckAngle",
+    landmarks[LANDMARK_INDICES.LEFT_SHOULDER],
+    landmarks[LANDMARK_INDICES.LEFT_EAR],
+    landmarks[LANDMARK_INDICES.NOSE],
+    tempPreviousAngles,
+    updatePrevious
+  );
+  setAllPreviousAngles(tempPreviousAngles);
 
-/**
- * 이전 각도 초기화 (웹캠 재시작 시)
- */
-export function resetAngleHistory() {
-  Object.keys(previousAngles).forEach((key) => {
-    delete previousAngles[key as keyof JointAngles];
-  });
+  return calculatedAngles;
 }
