@@ -1,4 +1,4 @@
-import MultiImageDetector from "@/components/image-detector/MultiImageDetector";
+import MultiImageDetector from "@/components/detector/image-detector/MultiImageDetector";
 
 export default function MultiPosePage() {
   return (

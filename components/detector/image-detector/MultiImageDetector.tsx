@@ -6,6 +6,15 @@ import { ImageControls } from "./ui/ImageControls";
 import { calculateAllAngles } from "@/lib/medaipipe/angle-calculator";
 import type { JointAngles } from "@/types/pose";
 
+
+// 샘플 이미지 목록 (public/images 폴더)
+const SAMPLE_IMAGES = [
+    {
+      name: "Tree",
+      path: "/images/tree_pose.png",
+    },
+  ];
+  
 export default function ImageMultiDetector() {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const { imageLandmarker, isInitialized, error: mpError } = useMediaPipe();
@@ -32,7 +41,7 @@ export default function ImageMultiDetector() {
             if (detection.landmarks && detection.landmarks.length > 0) {
             const worldLandmarks = detection.worldLandmarks?.[0];
             if (worldLandmarks) {
-                const angles = calculateAllAngles(worldLandmarks);
+                const angles = calculateAllAngles(worldLandmarks, {}, (angles: JointAngles) => {});
                 newResults.push(angles);
             }
             }
@@ -81,6 +90,9 @@ export default function ImageMultiDetector() {
             isInitialized={isInitialized}
             imageLoaded={results.length > 0}
             fileInputRef={fileInputRef}
+            sampleImages={SAMPLE_IMAGES}
+            onSampleSelect={(path: string) => {alert("샘플 이미지는 다중 이미지 처리에서 작동하지 않습니다.\n이미지 업로드 파일 버튼을 이용해주세요.");}}
+            currentImageSrc={null}
             />
 
 

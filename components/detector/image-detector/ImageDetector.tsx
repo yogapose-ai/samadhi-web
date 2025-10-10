@@ -5,7 +5,7 @@ import { useMediaPipe } from "@/hooks/useMediaPipe";
 import { usePoseStore } from "@/store/poseStore";
 import { ImageControls } from "./ui/ImageControls";
 import { ImageCanvas } from "./ui/ImageCanvas";
-import { AngleDisplayCard } from "@/components/pose-detector/ui/AngleDisplayCard";
+import { AngleDisplayCard } from "../AngleDisplayCard";
 import { ImageClassifier } from "@/components/classifier/ImageClassifier";
 
 
@@ -94,19 +94,13 @@ export default function ImageDetector() {
         currentImageSrc={imageSrc}
       />
 
-      {error && (
-        <div className='bg-red-50 border border-red-200 text-red-600 p-3 rounded-lg'>
-          {error}
-        </div>
-      )}
-
       <ImageCanvas
         imageSrc={imageSrc}
         isInitialized={isInitialized}
         landmarker={imageLandmarker}
       />
 
-      <AngleDisplayCard webcamAngles={image.angles} />
+      <AngleDisplayCard angles={image.angles} />
       <ImageClassifier angles={image.angles} />
     </div>
   );
