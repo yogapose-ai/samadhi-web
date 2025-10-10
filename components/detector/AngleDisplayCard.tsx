@@ -3,7 +3,7 @@ import { Activity } from "lucide-react";
 import { JointAngles } from "@/types/pose";
 
 interface AngleDisplayCardProps {
-  webcamAngles: JointAngles | null;
+  angles: JointAngles | null;
 }
 
 const groupAngles = (angles: JointAngles) => {
@@ -56,7 +56,9 @@ const AngleSection = ({
   </div>
 );
 
-export function AngleDisplayCard({ webcamAngles }: AngleDisplayCardProps) {
+export function AngleDisplayCard({
+  angles: webcamAngles,
+}: AngleDisplayCardProps) {
   if (!webcamAngles) return null;
 
   const grouped = groupAngles(webcamAngles);

@@ -4,16 +4,15 @@ import { useMediaPipe } from "@/hooks/useMediaPipe";
 import { useWebcam } from "@/hooks/useWebcam";
 import { usePoseStore } from "@/store/poseStore";
 import { WebcamControls } from "./ui/WebcamControls";
-import { AngleDisplayCard } from "./ui/AngleDisplayCard";
-import { resetAngleHistory } from "@/lib/medaipipe/angle-calculator";
+import { AngleDisplayCard } from "../AngleDisplayCard";
 import { useRef } from "react";
-import { PoseCanvas } from "./ui/PoseCanvas";
+import { WebcamCanvas } from "./ui/WebcamCanvas";
 
-export default function PoseDetector() {
+export default function WebcamDetector() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const { liveLandmarker, isInitialized, error: mpError } = useMediaPipe();
-  const { isActive, error: webcamError, startWebcam, stopWebcam } = useWebcam();
+  const { liveLandmarker, isInitialized } = useMediaPipe();
+  const { isActive, startWebcam, stopWebcam } = useWebcam();
   const { webcam } = usePoseStore();
 
   // 웹캠 시작 핸들러
@@ -26,13 +25,19 @@ export default function PoseDetector() {
   // 웹캠 중지 핸들러
   const handleStop = () => {
     stopWebcam();
-    resetAngleHistory();
   };
-
-  const error = mpError || webcamError;
 
   return (
     <div className='w-full space-y-4'>
+      <WebcamCanvas
+        videoRef={videoRef}
+        isActive={isActive}
+        isInitialized={isInitialized}
+        landmarker={liveLandmarker}
+      />
+
+      <AngleDisplayCard angles={webcam.angles} />
+
       <WebcamControls
         isActive={isActive}
         isInitialized={isInitialized}
@@ -40,21 +45,6 @@ export default function PoseDetector() {
         onStart={handleStart}
         onStop={handleStop}
       />
-
-      {error && (
-        <div className='bg-red-50 border border-red-200 text-red-600 p-3 rounded-lg'>
-          {error}
-        </div>
-      )}
-
-      <PoseCanvas
-        videoRef={videoRef}
-        isActive={isActive}
-        isInitialized={isInitialized}
-        landmarker={liveLandmarker}
-      />
-
-      <AngleDisplayCard webcamAngles={webcam.angles} />
     </div>
   );
 }
