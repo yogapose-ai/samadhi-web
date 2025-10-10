@@ -6,6 +6,7 @@ import { usePoseStore } from "@/store/poseStore";
 import { ImageControls } from "./ui/ImageControls";
 import { ImageCanvas } from "./ui/ImageCanvas";
 import { AngleDisplayCard } from "@/components/pose-detector/ui/AngleDisplayCard";
+import { ImageClassifier } from "@/components/classifier/ImageClassifier";
 
 export default function ImageDetector() {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
@@ -69,6 +70,7 @@ export default function ImageDetector() {
       />
 
       <AngleDisplayCard webcamAngles={image.angles} />
+      <ImageClassifier angles={image.angles} />
     </div>
   );
 }

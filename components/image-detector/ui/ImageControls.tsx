@@ -31,6 +31,7 @@ export function ImageControls({
           id='image-upload'
           type='file'
           accept='image/*'
+          multiple
           onChange={onFileChange}
           className='hidden'
           ref={fileInputRef}
