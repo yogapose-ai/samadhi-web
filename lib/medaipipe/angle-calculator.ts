@@ -338,8 +338,13 @@ export function calculateAllAngles(
 }
 
 export function CalculateSimilarity(P1: number[], P2: number[]): number {
+  console.log('P1', P1.length);
+  console.log('P2', P2.length);
+
   if (P1.length !== P2.length) {
-    throw new Error("두 벡터의 차원이 일치하지 않습니다.");
+    console.error('두 벡터의 차원이 일치하지 않습니다.');
+    return 0;
+    // throw new Error("두 벡터의 차원이 일치하지 않습니다.");
   }
 
   // 1. 코사인 유사도 계산
