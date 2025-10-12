@@ -338,11 +338,9 @@ export function calculateAllAngles(
 }
 
 export function CalculateSimilarity(P1: number[], P2: number[]): number {
-  console.log('P1', P1.length);
-  console.log('P2', P2.length);
 
   if (P1.length !== P2.length) {
-    console.error('두 벡터의 차원이 일치하지 않습니다.');
+    // console.error('두 벡터의 차원이 일치하지 않습니다.');
     return 0;
     // throw new Error("두 벡터의 차원이 일치하지 않습니다.");
   }
@@ -385,9 +383,95 @@ function l2norm(a: Landmark, b: Landmark) {
   return Math.hypot(a.x-b.x, a.y-b.y, a.z-b.z);
 }
 
+function l2norm1d(arr:number[], eps = 1e-6) {
+  let sum = 0;
+  for (let i = 0; i < arr.length; i++) sum += arr[i] * arr[i];
+  return Math.sqrt(sum) + eps;
+}
+
+function std(array:number[]) {
+  const mean = array.reduce((a, b) => a + b, 0) / array.length;
+  const variance = array.reduce((a, b) => a + (b - mean) ** 2, 0) / array.length;
+  return Math.sqrt(variance);
+}
+
+/**
+ * 3D 관절 좌표 시퀀스의 Jitter 계산
+ * @param poseLandmarks 3D 관절 좌표 시퀀스
+ * @returns 평균 Jitter 값 (낮을수록 안정적)
+ */
+export function calcJitter(poseLandmarks:Landmark[][]) {
+  const frameDiffs = [];
+
+  for (let i = 1; i < poseLandmarks.length; i++) {
+    const prev = poseLandmarks[i - 1];
+    const curr = poseLandmarks[i];
+
+    // 각 관절의 프레임 간 유클리드 거리
+    const distances = curr.map((joint, j) => {
+      const dx = joint.x - prev[j].x;
+      const dy = joint.y - prev[j].y;
+      const dz = joint.z - prev[j].z;
+      return Math.sqrt(dx * dx + dy * dy + dz * dz);
+    });
+
+    frameDiffs.push(distances);
+  }
+
+  // 관절별 jitter (표준편차)
+  const joints = frameDiffs[0].length;
+  const jitterPerJoint = Array(joints).fill(0);
+
+  for (let j = 0; j < joints; j++) {
+    const diffs = frameDiffs.map(f => f[j]);
+    jitterPerJoint[j] = std(diffs);
+  }
+
+  return jitterPerJoint.reduce((a,b)=>a+b,0)/jitterPerJoint.length;
+}
+
+/**
+ * 전처리 전 후 Jitter 비교
+ * @param landmarksA 전처리하기 전 3D 관절 좌표 시퀀스
+ */
+export function getJitter3D(landmarksA:Landmark[][]) {
+  const jitterA = calcJitter(landmarksA); //전처리 전
+
+  const landmarksB:Landmark[][] = []; //전처리 후 좌표값
+  //각 시퀀스에 대해 전처리 수행
+  for(let i=0; i<landmarksA.length; i++) { 
+    const landmarks = landmarksA[i];
+    const LHIP:Landmark = {x: landmarks[LANDMARK_INDICES.LEFT_HIP].x, y: landmarks[LANDMARK_INDICES.LEFT_HIP].y, z: landmarks[LANDMARK_INDICES.LEFT_HIP].z};
+    const RHIP:Landmark = {x: landmarks[LANDMARK_INDICES.RIGHT_HIP].x, y: landmarks[LANDMARK_INDICES.RIGHT_HIP].y, z: landmarks[LANDMARK_INDICES.RIGHT_HIP].z};
+    const LSHO:Landmark = {x: landmarks[LANDMARK_INDICES.LEFT_SHOULDER].x, y: landmarks[LANDMARK_INDICES.LEFT_SHOULDER].y, z: landmarks[LANDMARK_INDICES.LEFT_SHOULDER].z};
+    const RSHO:Landmark = {x: landmarks[LANDMARK_INDICES.RIGHT_SHOULDER].x, y: landmarks[LANDMARK_INDICES.RIGHT_SHOULDER].y, z: landmarks[LANDMARK_INDICES.RIGHT_SHOULDER].z};
+
+    const anchor = getMidpoint(LHIP, RHIP);
+    const scale = l2norm(LSHO, RSHO);
+    const normalized = landmarks.map((mark:Landmark) => {
+      if ((mark.visibility || 0) < MIN_VISIBILITY) {
+        return {x:0, y:0, z:0};
+      }
+      return {x:(mark.x - anchor.x)/scale, y:(mark.y - anchor.y)/scale, z:(mark.z - anchor.z)/scale};
+    });
+
+    const flatData = normalized.flatMap((mark) => [mark.x, mark.y, mark.z]);
+    const norm = l2norm1d(flatData);
+    const finalData = normalized.map((mark) => ({x: mark.x/norm, y: mark.y/norm, z: mark.z/norm}));
+    landmarksB.push(finalData);
+  }
+
+  const jitterB = calcJitter(landmarksB); //전처리 후 jitter 계산
+
+  console.log('(전처리 전)', jitterA);
+  console.log('(전처리 후)', jitterB);
+}
+
 export function vectorize(landmarks: Landmark[], height:number, width:number) {
   //픽셀 값 확인
   // console.log('height: ', height);
+
+  //전처리 전 좌표값을 1차원 벡터로 변경
 
   //픽셀 단위로 변환한 좌표값
   const LHIP:Landmark = {x: landmarks[LANDMARK_INDICES.LEFT_HIP].x * width, y: landmarks[LANDMARK_INDICES.LEFT_HIP].y * height, z: landmarks[LANDMARK_INDICES.LEFT_HIP].z * width};
@@ -407,6 +491,9 @@ export function vectorize(landmarks: Landmark[], height:number, width:number) {
   });
 
   // console.log('data', data.flat());
+  const norm = l2norm1d(data.flat());
+  const result = data.flat().map((d) => d/norm);
 
-  return data.flat();
+
+  return result;
 }

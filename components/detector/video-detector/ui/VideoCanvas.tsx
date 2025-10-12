@@ -76,7 +76,6 @@ export function VideoCanvas({
         const worldLandmarks = results.worldLandmarks?.[0];
 
         const data = vectorize(landmarks, videoElement.videoHeight, videoElement.videoWidth);
-        console.log('video data', data);
 
         if (worldLandmarks) {
           // 각도 계산

@@ -16,8 +16,6 @@ export default function WebcamDetector() {
   const { isActive, startWebcam, stopWebcam } = useWebcam();
   const { webcam, video } = usePoseStore();
 
-  console.log('비디오 앵글?', video);
-
   const P1 = webcam.vectorized;
   const P2 = video.vectorized;
 

@@ -1,10 +1,11 @@
 import { useRef, useEffect, useCallback } from "react";
 import {
   DrawingUtils,
+  Landmark,
   NormalizedLandmark,
   PoseLandmarker,
 } from "@mediapipe/tasks-vision";
-import { calculateAllAngles, vectorize } from "@/lib/medaipipe/angle-calculator";
+import { calculateAllAngles, getJitter3D, vectorize } from "@/lib/medaipipe/angle-calculator";
 import { usePoseStore } from "@/store/poseStore";
 import { JointAngles } from "@/types/pose";
 
@@ -34,6 +35,9 @@ const drawSkeleton = (
   });
 };
 
+const sequenceData: Landmark[][] = [];
+const startTime = Date.now();
+
 export function useWebcamCanvas({
   videoRef,
   isActive,
@@ -45,9 +49,6 @@ export function useWebcamCanvas({
   const lastFrameTime = useRef<number>(0);
 
   const { webcam, setWebcamData, setPreviousAngles, video } = usePoseStore();
-
-  const videoLandmarks = video.landmarks;
-  const vec = video.vectorized;
 
   // 포즈 감지 루프
   const detectLoop = useCallback(() => {
@@ -83,9 +84,17 @@ export function useWebcamCanvas({
         const landmarks = results.landmarks[0];
         const worldLandmarks = results.worldLandmarks?.[0];
 
-        const data = vectorize(landmarks, video.videoHeight, video.videoWidth);
-        console.log('webcam data', data);
+        // 👉 전처리 전, 후 jitter 값 비교를 위한 코드 
+        // (콘솔창에 찍어 확인하므로 실제 서비스시에는 주석 처리 필요)
+        const elapsed = (Date.now() - startTime) / 1000;
+        if(elapsed >= 10) {
+          // getJitter3D(sequenceData);
+        } else {
+          sequenceData.push(landmarks);
+        }
 
+        // 벡터화
+        const data = vectorize(landmarks, video.videoHeight, video.videoWidth);
 
         // 2D 랜드마크가 감지되었다면, 각도 계산 여부와 관계없이 스켈레톤을 즉시 그림
         drawSkeleton(ctx, landmarks);
