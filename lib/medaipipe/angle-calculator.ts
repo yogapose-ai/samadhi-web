@@ -335,3 +335,34 @@ export function calculateAllAngles(
 
   return calculatedAngles;
 }
+
+export function CalculateSimilarity(P1: number[], P2: number[]): number {
+  if (P1.length !== P2.length) {
+    throw new Error("두 벡터의 차원이 일치하지 않습니다.");
+  }
+
+  // 1. 코사인 유사도 계산
+  const dot = P1.reduce((sum, val, i) => sum + val * P2[i], 0);
+  const mag1 = Math.sqrt(P1.reduce((sum, val) => sum + val ** 2, 0));
+  const mag2 = Math.sqrt(P2.reduce((sum, val) => sum + val ** 2, 0));
+
+  if (mag1 === 0 || mag2 === 0) {
+    return 0;
+  }
+
+  const cosineSim = dot / (mag1 * mag2); // -1 ~ 1 사이 값
+
+  // 2. 유클리드 차이 반영
+  const diff = Math.sqrt(
+    P1.reduce((sum, val, i) => sum + (val - P2[i]) ** 2, 0)
+  );
+
+  // 3. 식에 맞춰 0~100점 스케일로 변환
+  const scaled = 100 - 100 * 0.5 * diff;
+  const bounded = Math.min(100, Math.max(0, scaled));
+
+  // 4. 코사인 유사도와 거리 기반 점수 혼합 (옵션) -> 일단 초기 : 0.7:0.3
+  const mixed = 0.7 * (cosineSim * 100) + 0.3 * bounded;
+
+  return Math.min(100, Math.max(0, mixed));
+}

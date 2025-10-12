@@ -66,7 +66,7 @@ export default function VideoDetector() {
   }, [currentTime, seekTo]);
 
   return (
-    <div className='w-full space-y-4'>
+    <div className="w-full space-y-4">
       <VideoCanvas
         videoRef={videoRef}
         isPlaying={isPlaying}
@@ -75,7 +75,7 @@ export default function VideoDetector() {
         landmarker={liveLandmarker}
       />
 
-      <AngleDisplayCard angles={video.angles} />
+      <AngleDisplayCard angles={video.angles} showSimilarity={false} />
 
       <VideoControls
         selectedVideo={selectedVideo}
