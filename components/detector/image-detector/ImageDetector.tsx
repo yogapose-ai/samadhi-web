@@ -8,7 +8,6 @@ import { ImageCanvas } from "./ui/ImageCanvas";
 import { AngleDisplayCard } from "../AngleDisplayCard";
 import { ImageClassifier } from "@/components/classifier/ImageClassifier";
 
-
 // 샘플 이미지 목록 (public/images 폴더)
 const SAMPLE_IMAGES = [
   {
@@ -74,14 +73,14 @@ export default function ImageDetector() {
   }, [imageSrc]);
 
   return (
-    <div className='w-full space-y-4'>
+    <div className="w-full space-y-4">
       <ImageCanvas
         imageSrc={imageSrc}
         isInitialized={isInitialized}
         landmarker={imageLandmarker}
       />
 
-      <AngleDisplayCard angles={image.angles} />
+      <AngleDisplayCard angles={image.angles} showSimilarity={false} />
 
       <ImageControls
         onFileChange={handleFileChange}
@@ -100,7 +99,7 @@ export default function ImageDetector() {
         landmarker={imageLandmarker}
       />
 
-      <AngleDisplayCard angles={image.angles} />
+      <AngleDisplayCard angles={image.angles} showSimilarity={false} />
       <ImageClassifier angles={image.angles} />
     </div>
   );
