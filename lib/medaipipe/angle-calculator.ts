@@ -338,37 +338,60 @@ export function calculateAllAngles(
 }
 
 export function CalculateSimilarity(P1: number[], P2: number[]): number {
+  const n = P1.length;
 
-  if (P1.length !== P2.length) {
-    // console.error('두 벡터의 차원이 일치하지 않습니다.');
+  if (n !== P2.length || n === 0) {
     return 0;
-    // throw new Error("두 벡터의 차원이 일치하지 않습니다.");
   }
 
-  // 1. 코사인 유사도 계산
-  const dot = P1.reduce((sum, val, i) => sum + val * P2[i], 0);
-  const mag1 = Math.sqrt(P1.reduce((sum, val) => sum + val ** 2, 0));
-  const mag2 = Math.sqrt(P2.reduce((sum, val) => sum + val ** 2, 0));
+  // 내적과 노름
+  let dot = 0;
+  let sum1 = 0;
+  let sum2 = 0;
+  let diffSum = 0;
+
+  for (let i = 0; i < n; i++) {
+    const a = P1[i];
+    const b = P2[i];
+
+    dot += a * b;
+    sum1 += a * a;
+    sum2 += b * b;
+    const d = a - b;
+    diffSum += d * d;
+  }
+
+  const mag1 = Math.sqrt(sum1);
+  const mag2 = Math.sqrt(sum2);
 
   if (mag1 === 0 || mag2 === 0) {
     return 0;
   }
 
-  const cosineSim = dot / (mag1 * mag2); // -1 ~ 1 사이 값
+  // 1) 코사인 유사도 (클램프)
+  let cosine = dot / (mag1 * mag2);
+  if (cosine > 1) {
+    cosine = 1;
+  } else if (cosine < -1) {
+    cosine = -1;
+  }
+  const cosineScore = ((cosine + 1) / 2) * 100; // 코사인 점수 -> 방향
 
-  // 2. 유클리드 차이 반영
-  const diff = Math.sqrt(
-    P1.reduce((sum, val, i) => sum + (val - P2[i]) ** 2, 0)
-  );
+  // 2) 유클리드 거리 정규화 -> notion 계산공식
+  const diff = Math.sqrt(diffSum);
+  const normDiff = diff / (mag1 + mag2 + 1e-12); // 0~1 근사
+  const euclidScore = (1 - normDiff) * 100; // 유클리드 점수 -> 크기
 
-  // 3. 식에 맞춰 0~100점 스케일로 변환
-  const scaled = 100 - 100 * 0.5 * diff;
-  const bounded = Math.min(100, Math.max(0, scaled));
+  // 3) 혼합 - 일단 임시: 0.7:0.3
+  const mixed = 0.7 * cosineScore + 0.3 * euclidScore;
 
-  // 4. 코사인 유사도와 거리 기반 점수 혼합 (옵션) -> 일단 초기 : 0.7:0.3
-  const mixed = 0.7 * (cosineSim * 100) + 0.3 * bounded;
+  // 4) ε 허용 + 반올림
+  const eps = 1e-4;
+  if (1 - cosine < eps && normDiff < eps) {
+    return 100;
+  }
 
-  return Math.min(100, Math.max(0, mixed));
+  return Math.max(0, Math.min(100, Math.round(mixed * 1000) / 1000));
 }
 
 /*
@@ -380,18 +403,19 @@ export function CalculateSimilarity(P1: number[], P2: number[]): number {
 */
 
 function l2norm(a: Landmark, b: Landmark) {
-  return Math.hypot(a.x-b.x, a.y-b.y, a.z-b.z);
+  return Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z);
 }
 
-function l2norm1d(arr:number[], eps = 1e-6) {
+function l2norm1d(arr: number[], eps = 1e-6) {
   let sum = 0;
   for (let i = 0; i < arr.length; i++) sum += arr[i] * arr[i];
   return Math.sqrt(sum) + eps;
 }
 
-function std(array:number[]) {
+function std(array: number[]) {
   const mean = array.reduce((a, b) => a + b, 0) / array.length;
-  const variance = array.reduce((a, b) => a + (b - mean) ** 2, 0) / array.length;
+  const variance =
+    array.reduce((a, b) => a + (b - mean) ** 2, 0) / array.length;
   return Math.sqrt(variance);
 }
 
@@ -400,7 +424,7 @@ function std(array:number[]) {
  * @param poseLandmarks 3D 관절 좌표 시퀀스
  * @returns 평균 Jitter 값 (낮을수록 안정적)
  */
-export function calcJitter(poseLandmarks:Landmark[][]) {
+export function calcJitter(poseLandmarks: Landmark[][]) {
   const frameDiffs = [];
 
   for (let i = 1; i < poseLandmarks.length; i++) {
@@ -423,77 +447,124 @@ export function calcJitter(poseLandmarks:Landmark[][]) {
   const jitterPerJoint = Array(joints).fill(0);
 
   for (let j = 0; j < joints; j++) {
-    const diffs = frameDiffs.map(f => f[j]);
+    const diffs = frameDiffs.map((f) => f[j]);
     jitterPerJoint[j] = std(diffs);
   }
 
-  return jitterPerJoint.reduce((a,b)=>a+b,0)/jitterPerJoint.length;
+  return jitterPerJoint.reduce((a, b) => a + b, 0) / jitterPerJoint.length;
 }
 
 /**
  * 전처리 전 후 Jitter 비교
  * @param landmarksA 전처리하기 전 3D 관절 좌표 시퀀스
  */
-export function getJitter3D(landmarksA:Landmark[][]) {
+export function getJitter3D(landmarksA: Landmark[][]) {
   const jitterA = calcJitter(landmarksA); //전처리 전
 
-  const landmarksB:Landmark[][] = []; //전처리 후 좌표값
+  const landmarksB: Landmark[][] = []; //전처리 후 좌표값
   //각 시퀀스에 대해 전처리 수행
-  for(let i=0; i<landmarksA.length; i++) { 
+  for (let i = 0; i < landmarksA.length; i++) {
     const landmarks = landmarksA[i];
-    const LHIP:Landmark = {x: landmarks[LANDMARK_INDICES.LEFT_HIP].x, y: landmarks[LANDMARK_INDICES.LEFT_HIP].y, z: landmarks[LANDMARK_INDICES.LEFT_HIP].z};
-    const RHIP:Landmark = {x: landmarks[LANDMARK_INDICES.RIGHT_HIP].x, y: landmarks[LANDMARK_INDICES.RIGHT_HIP].y, z: landmarks[LANDMARK_INDICES.RIGHT_HIP].z};
-    const LSHO:Landmark = {x: landmarks[LANDMARK_INDICES.LEFT_SHOULDER].x, y: landmarks[LANDMARK_INDICES.LEFT_SHOULDER].y, z: landmarks[LANDMARK_INDICES.LEFT_SHOULDER].z};
-    const RSHO:Landmark = {x: landmarks[LANDMARK_INDICES.RIGHT_SHOULDER].x, y: landmarks[LANDMARK_INDICES.RIGHT_SHOULDER].y, z: landmarks[LANDMARK_INDICES.RIGHT_SHOULDER].z};
+    const LHIP: Landmark = {
+      x: landmarks[LANDMARK_INDICES.LEFT_HIP].x,
+      y: landmarks[LANDMARK_INDICES.LEFT_HIP].y,
+      z: landmarks[LANDMARK_INDICES.LEFT_HIP].z,
+    };
+    const RHIP: Landmark = {
+      x: landmarks[LANDMARK_INDICES.RIGHT_HIP].x,
+      y: landmarks[LANDMARK_INDICES.RIGHT_HIP].y,
+      z: landmarks[LANDMARK_INDICES.RIGHT_HIP].z,
+    };
+    const LSHO: Landmark = {
+      x: landmarks[LANDMARK_INDICES.LEFT_SHOULDER].x,
+      y: landmarks[LANDMARK_INDICES.LEFT_SHOULDER].y,
+      z: landmarks[LANDMARK_INDICES.LEFT_SHOULDER].z,
+    };
+    const RSHO: Landmark = {
+      x: landmarks[LANDMARK_INDICES.RIGHT_SHOULDER].x,
+      y: landmarks[LANDMARK_INDICES.RIGHT_SHOULDER].y,
+      z: landmarks[LANDMARK_INDICES.RIGHT_SHOULDER].z,
+    };
 
     const anchor = getMidpoint(LHIP, RHIP);
     const scale = l2norm(LSHO, RSHO);
-    const normalized = landmarks.map((mark:Landmark) => {
+    const normalized = landmarks.map((mark: Landmark) => {
       if ((mark.visibility || 0) < MIN_VISIBILITY) {
-        return {x:0, y:0, z:0};
+        return { x: 0, y: 0, z: 0 };
       }
-      return {x:(mark.x - anchor.x)/scale, y:(mark.y - anchor.y)/scale, z:(mark.z - anchor.z)/scale};
+      return {
+        x: (mark.x - anchor.x) / scale,
+        y: (mark.y - anchor.y) / scale,
+        z: (mark.z - anchor.z) / scale,
+      };
     });
 
     const flatData = normalized.flatMap((mark) => [mark.x, mark.y, mark.z]);
     const norm = l2norm1d(flatData);
-    const finalData = normalized.map((mark) => ({x: mark.x/norm, y: mark.y/norm, z: mark.z/norm}));
+    const finalData = normalized.map((mark) => ({
+      x: mark.x / norm,
+      y: mark.y / norm,
+      z: mark.z / norm,
+    }));
     landmarksB.push(finalData);
   }
 
   const jitterB = calcJitter(landmarksB); //전처리 후 jitter 계산
 
-  console.log('(전처리 전)', jitterA);
-  console.log('(전처리 후)', jitterB);
+  console.log("(전처리 전)", jitterA);
+  console.log("(전처리 후)", jitterB);
 }
 
-export function vectorize(landmarks: Landmark[], height:number, width:number) {
+export function vectorize(
+  landmarks: Landmark[],
+  height: number,
+  width: number
+) {
   //픽셀 값 확인
   // console.log('height: ', height);
 
   //전처리 전 좌표값을 1차원 벡터로 변경
 
   //픽셀 단위로 변환한 좌표값
-  const LHIP:Landmark = {x: landmarks[LANDMARK_INDICES.LEFT_HIP].x * width, y: landmarks[LANDMARK_INDICES.LEFT_HIP].y * height, z: landmarks[LANDMARK_INDICES.LEFT_HIP].z * width};
-  const RHIP:Landmark = {x: landmarks[LANDMARK_INDICES.RIGHT_HIP].x * width, y: landmarks[LANDMARK_INDICES.RIGHT_HIP].y * height, z: landmarks[LANDMARK_INDICES.RIGHT_HIP].z * width};
-  const LSHO:Landmark = {x: landmarks[LANDMARK_INDICES.LEFT_SHOULDER].x * width, y: landmarks[LANDMARK_INDICES.LEFT_SHOULDER].y * height, z: landmarks[LANDMARK_INDICES.LEFT_SHOULDER].z * width};
-  const RSHO:Landmark = {x: landmarks[LANDMARK_INDICES.RIGHT_SHOULDER].x * width, y: landmarks[LANDMARK_INDICES.RIGHT_SHOULDER].y * height, z: landmarks[LANDMARK_INDICES.RIGHT_SHOULDER].z * width};
+  const LHIP: Landmark = {
+    x: landmarks[LANDMARK_INDICES.LEFT_HIP].x * width,
+    y: landmarks[LANDMARK_INDICES.LEFT_HIP].y * height,
+    z: landmarks[LANDMARK_INDICES.LEFT_HIP].z * width,
+  };
+  const RHIP: Landmark = {
+    x: landmarks[LANDMARK_INDICES.RIGHT_HIP].x * width,
+    y: landmarks[LANDMARK_INDICES.RIGHT_HIP].y * height,
+    z: landmarks[LANDMARK_INDICES.RIGHT_HIP].z * width,
+  };
+  const LSHO: Landmark = {
+    x: landmarks[LANDMARK_INDICES.LEFT_SHOULDER].x * width,
+    y: landmarks[LANDMARK_INDICES.LEFT_SHOULDER].y * height,
+    z: landmarks[LANDMARK_INDICES.LEFT_SHOULDER].z * width,
+  };
+  const RSHO: Landmark = {
+    x: landmarks[LANDMARK_INDICES.RIGHT_SHOULDER].x * width,
+    y: landmarks[LANDMARK_INDICES.RIGHT_SHOULDER].y * height,
+    z: landmarks[LANDMARK_INDICES.RIGHT_SHOULDER].z * width,
+  };
 
   const anchor = getMidpoint(LHIP, RHIP);
   const scale = l2norm(LSHO, RSHO);
 
   //랜드마크에 대해 픽셀 단위로 변환
-  const data = landmarks.map((mark:Landmark) => {
+  const data = landmarks.map((mark: Landmark) => {
     if ((mark.visibility || 0) < MIN_VISIBILITY) {
       return [0, 0, 0];
     }
-    return [(mark.x * width - anchor.x)/scale, (mark.y * height - anchor.y)/scale, (mark.z * width - anchor.z)/scale];
+    return [
+      (mark.x * width - anchor.x) / scale,
+      (mark.y * height - anchor.y) / scale,
+      (mark.z * width - anchor.z) / scale,
+    ];
   });
 
   // console.log('data', data.flat());
   const norm = l2norm1d(data.flat());
-  const result = data.flat().map((d) => d/norm);
-
+  const result = data.flat().map((d) => d / norm);
 
   return result;
 }
