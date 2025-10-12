@@ -14,7 +14,9 @@ export default function WebcamDetector() {
 
   const { liveLandmarker, isInitialized } = useMediaPipe();
   const { isActive, startWebcam, stopWebcam } = useWebcam();
-  const { webcam } = usePoseStore();
+  const { webcam, video } = usePoseStore();
+
+  console.log('비디오 앵글?', video);
 
   const P1 = [0.5, 0.5, 0.5, 0.7, 0.9];
   const P2 = [0.12, 0.28, 0.55, 0.68, 0.95];

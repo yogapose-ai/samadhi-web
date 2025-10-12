@@ -7,7 +7,7 @@ import {
   PoseLandmarker,
 } from "@mediapipe/tasks-vision";
 import { Video } from "lucide-react";
-import { calculateAllAngles } from "@/lib/medaipipe/angle-calculator";
+import { calculateAllAngles, vectorize } from "@/lib/medaipipe/angle-calculator";
 import { usePoseStore } from "@/store/poseStore";
 import { JointAngles } from "@/types/pose";
 
@@ -75,6 +75,9 @@ export function VideoCanvas({
         const landmarks = results.landmarks[0];
         const worldLandmarks = results.worldLandmarks?.[0];
 
+        const data = vectorize(landmarks, videoElement.videoHeight, videoElement.videoWidth);
+        console.log('video data', data);
+
         if (worldLandmarks) {
           // 각도 계산
           const angles = calculateAllAngles(
@@ -90,7 +93,7 @@ export function VideoCanvas({
           lastFrameTime.current = now;
 
           // Store에 저장
-          setVideoData(landmarks, angles, fps);
+          setVideoData(landmarks, angles, fps, data);
 
           // 스켈레톤 그리기
           drawSkeleton(ctx, landmarks);

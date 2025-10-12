@@ -18,6 +18,7 @@ const SAMPLE_VIDEOS = [
 
 export default function VideoDetector() {
   const { liveLandmarker, isInitialized } = useMediaPipe();
+  // console.log('livelandmarker', liveLandmarker);
   const {
     videoRef,
     isPlaying,
@@ -29,6 +30,8 @@ export default function VideoDetector() {
     seekTo,
   } = useVideo();
   const { video } = usePoseStore();
+
+  // console.log('video', video.angles)
 
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
 

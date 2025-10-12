@@ -66,6 +66,7 @@ export function AngleDisplayCard({
   if (!webcamAngles) return null;
 
   const grouped = groupAngles(webcamAngles);
+  // console.log('grouped', grouped);
 
   return (
     <div className="space-y-6">

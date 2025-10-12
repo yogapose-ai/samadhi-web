@@ -66,6 +66,7 @@ function calculateAngle3D(
 
   // 각도 계산
   const cosAngle = dot / (magBA * magBC);
+
   const angle =
     (Math.acos(Math.max(-1, Math.min(1, cosAngle))) * 180) / Math.PI;
 
@@ -365,4 +366,42 @@ export function CalculateSimilarity(P1: number[], P2: number[]): number {
   const mixed = 0.7 * (cosineSim * 100) + 0.3 * bounded;
 
   return Math.min(100, Math.max(0, mixed));
+}
+
+/*
+
+  const dx = a[0] - b[0];
+  const dy = a[1] - b[1];
+  const dz = a[2] - b[2];
+  return Math.hypot(dx, dy, dz); // Math.sqrt(dx*dx + dy*dy + dz*dz)와 동일
+*/
+
+function l2norm(a: Landmark, b: Landmark) {
+  return Math.hypot(a.x-b.x, a.y-b.y, a.z-b.z);
+}
+
+export function vectorize(landmarks: Landmark[], height:number, width:number) {
+  //픽셀 값 확인
+  // console.log('height: ', height);
+
+  //픽셀 단위로 변환한 좌표값
+  const LHIP:Landmark = {x: landmarks[LANDMARK_INDICES.LEFT_HIP].x * width, y: landmarks[LANDMARK_INDICES.LEFT_HIP].y * height, z: landmarks[LANDMARK_INDICES.LEFT_HIP].z * width};
+  const RHIP:Landmark = {x: landmarks[LANDMARK_INDICES.RIGHT_HIP].x * width, y: landmarks[LANDMARK_INDICES.RIGHT_HIP].y * height, z: landmarks[LANDMARK_INDICES.RIGHT_HIP].z * width};
+  const LSHO:Landmark = {x: landmarks[LANDMARK_INDICES.LEFT_SHOULDER].x * width, y: landmarks[LANDMARK_INDICES.LEFT_SHOULDER].y * height, z: landmarks[LANDMARK_INDICES.LEFT_SHOULDER].z * width};
+  const RSHO:Landmark = {x: landmarks[LANDMARK_INDICES.RIGHT_SHOULDER].x * width, y: landmarks[LANDMARK_INDICES.RIGHT_SHOULDER].y * height, z: landmarks[LANDMARK_INDICES.RIGHT_SHOULDER].z * width};
+
+  const anchor = getMidpoint(LHIP, RHIP);
+  const scale = l2norm(LSHO, RSHO);
+
+  //랜드마크에 대해 픽셀 단위로 변환
+  const data = landmarks.map((mark:Landmark) => {
+    if ((mark.visibility || 0) < MIN_VISIBILITY) {
+      return [0, 0, 0];
+    }
+    return [(mark.x * width - anchor.x)/scale, (mark.y * height - anchor.y)/scale, (mark.z * width - anchor.z)/scale];
+  });
+
+  // console.log('data', data.flat());
+
+  return data.flat();
 }
