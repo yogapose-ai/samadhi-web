@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useMediaPipe } from '@/hooks/useMediaPipe';
 
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,7 @@ import {
 import {
   calculatePoseAndSimilarity,
   ImageComparatorOutput,
+  ImagePair,
 } from '@/lib/poseComparator/pose-comparator';
 
 const SAMPLE_IMAGES = [
@@ -27,35 +28,69 @@ const SAMPLE_IMAGES = [
     isSame: 1,
   },
 ];
+const LAMBDA = 70;
 
 export default function ImageComparator() {
   const { imageLandmarker, isInitialized } = useMediaPipe();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [results, setResults] = useState<ImageComparatorOutput[]>([]);
+  const [imageList, setImageList] = useState<ImagePair[]>(SAMPLE_IMAGES);
+  const [processedCount, setProcessedCount] = useState<number>(0);
 
-  const onButtonClick = useCallback(async () => {
+  useEffect(() => {
+    // public 폴더의 파일은 절대 경로로 바로 fetch 할 수 있습니다.
+    fetch('/dataset/dataset.json')
+      .then((response) => response.json())
+      .then((data: ImagePair[]) => {
+        setImageList(data);
+      })
+      .catch((error) => {
+        alert(`설정 파일을 불러오는 데 실패했습니다: ${error}`);
+      });
+  }, []); // 빈 배열을 전달하여 최초 렌더링 시에만 실행
+
+  const compareImages = useCallback(async () => {
     if (!isInitialized || !imageLandmarker) return;
+    setIsLoading(true);
     const result = await calculatePoseAndSimilarity({
-      lambda: 70,
-      imageList: SAMPLE_IMAGES,
+      lambda: LAMBDA,
+      imageList: imageList,
       imageLandmarker,
+      onProgress: (processed) => setProcessedCount(processed),
     });
     setResults(result);
-  }, [isInitialized, imageLandmarker]);
+    setIsLoading(false);
+  }, [isInitialized, imageLandmarker, imageList]);
 
   return (
     <div className='w-full space-y-4'>
-      <Button
-        onClick={onButtonClick}
-        disabled={!isInitialized}
-        size='default'
-        className='gap-2 h-9 text-sm w-auto px-5'
-        variant='outline'
-      >
-        {' '}
-        이미지 비교하기
-      </Button>
+      <h2 className='text-xl font-normal'>
+        프로젝트 폴더에서 아래 명령어로 이미지쌍 데이터셋 파일을 생성 후
+        이미지를 비교해주세요!
+      </h2>
+      <pre className='bg-gray-100 p-4 rounded text-sm overflow-x-auto'>
+        node lib/poseComparator/dataset-composer.js
+      </pre>
+      <div className='gap-2 text-sm'>
+        lambda: {LAMBDA} (cosine {(LAMBDA / 100).toFixed(2)}, euclid{' '}
+        {(1 - LAMBDA / 100).toFixed(2)}){' '}
+        <Button
+          onClick={compareImages}
+          disabled={!isInitialized}
+          size='default'
+          className='gap-2 h-9 text-sm w-auto px-5'
+          variant='outline'
+        >
+          이미지 비교하기
+        </Button>
+      </div>
+      {isLoading && (
+        <div className='text-sm'>
+          이미지 비교 진행 중... ({processedCount}/{imageList.length})
+        </div>
+      )}
 
-      {results.length > 0 && (
+      {!isLoading && (
         <div className='space-y-4'>
           <div className='flex gap-2'>
             <Button
@@ -95,8 +130,8 @@ export default function ImageComparator() {
                   총 행 개수: <span className='font-semibold'>{total}</span>{' '}
                   (정확도: {(acc * 100).toFixed(1)}%)
                 </div>
-                <div className='overflow-x-auto'>
-                  <table className='text-xs border border-gray-200'>
+                <div className='overflow-x-auto flex justify-center'>
+                  <table className='text-xs border border-gray-200 mx-auto'>
                     <thead>
                       <tr className='bg-gray-50'>
                         <th className='px-3 py-2 border'></th>

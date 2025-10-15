@@ -1,0 +1,1102 @@
+[
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000277.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000341.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000140.jpg"
+    },
+    "image2": {
+      "poseAnswer": "warrior2",
+      "path": "/archive/DATASET/TRAIN/warrior2/00000418.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000385.png"
+    },
+    "image2": {
+      "poseAnswer": "warrior2",
+      "path": "/archive/DATASET/TRAIN/warrior2/00000367.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000277.jpg"
+    },
+    "image2": {
+      "poseAnswer": "tree",
+      "path": "/archive/DATASET/TRAIN/tree/00000182.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000117.jpg"
+    },
+    "image2": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000348.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000204.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000416.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000233.jpg"
+    },
+    "image2": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000299.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000211.jpg"
+    },
+    "image2": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000255.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000277.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000292.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000236.JPG"
+    },
+    "image2": {
+      "poseAnswer": "warrior2",
+      "path": "/archive/DATASET/TRAIN/warrior2/00000225.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000351.png"
+    },
+    "image2": {
+      "poseAnswer": "warrior2",
+      "path": "/archive/DATASET/TRAIN/warrior2/00000335.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000172.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000212.png"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000379.jpg"
+    },
+    "image2": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000315.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000209.jpg"
+    },
+    "image2": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000270.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000141.jpg"
+    },
+    "image2": {
+      "poseAnswer": "warrior2",
+      "path": "/archive/DATASET/TRAIN/warrior2/00000387.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000291.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000330.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000365.jpg"
+    },
+    "image2": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000104.jpeg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000319.jpg"
+    },
+    "image2": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000337.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000360.jpg"
+    },
+    "image2": {
+      "poseAnswer": "warrior2",
+      "path": "/archive/DATASET/TRAIN/warrior2/00000344.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000232.jpg"
+    },
+    "image2": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000228.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000212.jpg"
+    },
+    "image2": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000318.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000211.jpg"
+    },
+    "image2": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000263.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000143.jpg"
+    },
+    "image2": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000146.png"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000219.jpg"
+    },
+    "image2": {
+      "poseAnswer": "warrior2",
+      "path": "/archive/DATASET/TRAIN/warrior2/00000209.JPG"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000400.jpg"
+    },
+    "image2": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000326.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000146.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000382.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000370.jpg"
+    },
+    "image2": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000339.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000307.jpg"
+    },
+    "image2": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000276.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000130.jpg"
+    },
+    "image2": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000362.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000317.jpg"
+    },
+    "image2": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000283.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000268.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000388.png"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000409.jpg"
+    },
+    "image2": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000134.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000230.jpg"
+    },
+    "image2": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000308.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000297.jpg"
+    },
+    "image2": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000276.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000151.jpg"
+    },
+    "image2": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000161.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000289.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000360.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000346.jpg"
+    },
+    "image2": {
+      "poseAnswer": "warrior2",
+      "path": "/archive/DATASET/TRAIN/warrior2/00000329.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000308.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000351.png"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000136.png"
+    },
+    "image2": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000380.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000241.jpg"
+    },
+    "image2": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000243.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000150.jpg"
+    },
+    "image2": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000208.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000129.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000330.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000250.jpg"
+    },
+    "image2": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000258.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000277.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000337.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000208.jpg"
+    },
+    "image2": {
+      "poseAnswer": "warrior2",
+      "path": "/archive/DATASET/TRAIN/warrior2/00000198.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000216.jpg"
+    },
+    "image2": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000217.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000162.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000288.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000283.jpg"
+    },
+    "image2": {
+      "poseAnswer": "warrior2",
+      "path": "/archive/DATASET/TRAIN/warrior2/00000265.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000369.png"
+    },
+    "image2": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000107.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000309.jpg"
+    },
+    "image2": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000324.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000113.jpg"
+    },
+    "image2": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000149.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000362.jpg"
+    },
+    "image2": {
+      "poseAnswer": "warrior2",
+      "path": "/archive/DATASET/TRAIN/warrior2/00000346.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000254.jpg"
+    },
+    "image2": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000245.png"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000309.jpg"
+    },
+    "image2": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000288.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000147.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000210.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000163.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000290.png"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000172.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000306.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000276.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000346.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000132.jpg"
+    },
+    "image2": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000306.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000298.jpg"
+    },
+    "image2": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000431.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000153.jpg"
+    },
+    "image2": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000170.png"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000297.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000376.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000278.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000356.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000276.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000293.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000210.jpg"
+    },
+    "image2": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000325.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000283.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000366.png"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000151.jpg"
+    },
+    "image2": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000199.JPG"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000229.jpg"
+    },
+    "image2": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000266.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000156.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000328.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000189.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000287.png"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000226.jpg"
+    },
+    "image2": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000385.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000212.jpg"
+    },
+    "image2": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000281.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000211.jpg"
+    },
+    "image2": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000290.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000150.jpg"
+    },
+    "image2": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000221.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000144.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000247.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000211.jpg"
+    },
+    "image2": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000397.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000161.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000228.png"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000151.jpg"
+    },
+    "image2": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000253.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000159.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000381.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000289.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000324.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000290.png"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000360.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000370.jpg"
+    },
+    "image2": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000108.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000156.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000283.jpg"
+    },
+    "isSame": 1
+  },
+  {
+    "image1": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000177.jpg"
+    },
+    "image2": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000390.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000188.jpg"
+    },
+    "image2": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000399.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000310.png"
+    },
+    "image2": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000325.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000333.jpg"
+    },
+    "image2": {
+      "poseAnswer": "warrior2",
+      "path": "/archive/DATASET/TRAIN/warrior2/00000318.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000219.jpg"
+    },
+    "image2": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000219.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000285.jpg"
+    },
+    "image2": {
+      "poseAnswer": "warrior2",
+      "path": "/archive/DATASET/TRAIN/warrior2/00000267.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000246.jpg"
+    },
+    "image2": {
+      "poseAnswer": "warrior2",
+      "path": "/archive/DATASET/TRAIN/warrior2/00000238.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000287.png"
+    },
+    "image2": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000291.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000353.jpg"
+    },
+    "image2": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000398.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000144.jpg"
+    },
+    "image2": {
+      "poseAnswer": "warrior2",
+      "path": "/archive/DATASET/TRAIN/warrior2/00000421.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000242.jpg"
+    },
+    "image2": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000232.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000419.jpg"
+    },
+    "image2": {
+      "poseAnswer": "tree",
+      "path": "/archive/DATASET/TRAIN/tree/00000126.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000135.jpg"
+    },
+    "image2": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000105.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000224.jpg"
+    },
+    "image2": {
+      "poseAnswer": "warrior2",
+      "path": "/archive/DATASET/TRAIN/warrior2/00000214.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000328.jpg"
+    },
+    "image2": {
+      "poseAnswer": "warrior2",
+      "path": "/archive/DATASET/TRAIN/warrior2/00000312.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "goddess",
+      "path": "/archive/DATASET/TRAIN/goddess/00000100.jpg"
+    },
+    "image2": {
+      "poseAnswer": "plank",
+      "path": "/archive/DATASET/TRAIN/plank/00000130.jpg"
+    },
+    "isSame": 0
+  },
+  {
+    "image1": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000139.jpg"
+    },
+    "image2": {
+      "poseAnswer": "downdog",
+      "path": "/archive/DATASET/TRAIN/downdog/00000244.jpg"
+    },
+    "isSame": 1
+  }
+]

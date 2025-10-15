@@ -46,7 +46,7 @@ export const flipHorizontal = (img: HTMLImageElement): Promise<HTMLImageElement>
   };
 
 // 이미지에서 랜드마크 추출 및 벡터화
-export const calculateImageAndVectorized = async (image: HTMLImageElement, imageLandmarker: PoseLandmarker) => {
+export const calculateAngleAndVectorized = async (image: HTMLImageElement, imageLandmarker: PoseLandmarker) => {
     const detectResults = imageLandmarker.detect(image);
 
     if (!detectResults || !detectResults.landmarks) return null;
@@ -65,7 +65,7 @@ export const calculateImageAndVectorized = async (image: HTMLImageElement, image
     return { angles, vectorized };
   };
   
-type ImagePair = {
+export type ImagePair = {
     image1: {
         poseAnswer: string;
         path: string;
@@ -81,6 +81,7 @@ interface ImageComparatorInput {
     lambda: number;
     imageList: ImagePair[];
     imageLandmarker: PoseLandmarker;
+    onProgress?: (processed: number) => void;
 }
 
 export interface ImageComparatorOutput {
@@ -110,16 +111,16 @@ export interface ImageComparatorOutput {
 }
 
 // 이미지 쌍에 대해 포즈 분류 및 유사도 계산
-export const calculatePoseAndSimilarity = async ({lambda, imageList, imageLandmarker}: ImageComparatorInput) => {
+export const calculatePoseAndSimilarity = async ({lambda, imageList, imageLandmarker, onProgress}: ImageComparatorInput) => {
     const result = [];
     for (let i = 0; i < imageList.length; i++) {
       const image1 = await createImageFromPath(imageList[i].image1.path);
       const image2 = await createImageFromPath(imageList[i].image2.path);
       const image2_flipped = await flipHorizontal(image2); // 좌우 반전 이미지 생성
 
-      const result1 = await calculateImageAndVectorized(image1, imageLandmarker);
-      const result2 = await calculateImageAndVectorized(image2, imageLandmarker);
-      const result2_flipped = await calculateImageAndVectorized(image2_flipped, imageLandmarker);
+      const result1 = await calculateAngleAndVectorized(image1, imageLandmarker);
+      const result2 = await calculateAngleAndVectorized(image2, imageLandmarker);
+      const result2_flipped = await calculateAngleAndVectorized(image2_flipped, imageLandmarker);
 
       if (!result1 || !result2 || !result2_flipped) continue;
 
@@ -143,7 +144,7 @@ export const calculatePoseAndSimilarity = async ({lambda, imageList, imageLandma
           ? similarity_original
           : similarity_flipped;
           
-      const isSameResult = similarity?.mixedScore ?? 0 > lambda ? 1 : 0;
+      const isSameResult = (similarity?.mixedScore ?? 0) > lambda ? 1 : 0;
       result.push({
         image1: {
           poseAnswer: imageList[i].image1.poseAnswer,
@@ -169,6 +170,7 @@ export const calculatePoseAndSimilarity = async ({lambda, imageList, imageLandma
         isSameAnswer: imageList[i].isSame,
         isSameResult: isSameResult,
       });
+        onProgress?.(i + 1);
     }
 
     return result;
