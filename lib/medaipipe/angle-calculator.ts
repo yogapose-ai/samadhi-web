@@ -563,8 +563,9 @@ export function vectorize(
   });
 
   // console.log('data', data.flat());
-  const norm = l2norm1d(data.flat());
-  const result = data.flat().map((d) => d / norm);
+  // const norm = l2norm1d(data.flat());
+  // const result = data.flat().map((d) => d / norm);
+  const result = data.flat();
 
   return result;
 }
