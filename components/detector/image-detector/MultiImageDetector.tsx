@@ -90,6 +90,7 @@ export default function ImageMultiDetector() {
             isInitialized={isInitialized}
             imageLoaded={results.length > 0}
             fileInputRef={fileInputRef}
+            fileInputId={'image-upload'}
             sampleImages={SAMPLE_IMAGES}
             onSampleSelect={(path: string) => {alert("샘플 이미지는 다중 이미지 처리에서 작동하지 않습니다.\n이미지 업로드 파일 버튼을 이용해주세요.");}}
             currentImageSrc={null}

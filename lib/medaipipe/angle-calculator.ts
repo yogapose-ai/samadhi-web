@@ -337,11 +337,21 @@ export function calculateAllAngles(
   return calculatedAngles;
 }
 
-export function CalculateSimilarity(P1: number[], P2: number[]): number {
+export interface SimilarityResult {
+    cosine: number;       // 코사인 유사도 (-1 ~ 1)
+    cosineScore: number;  // 코사인 점수 (0 ~ 100)
+    diff: number;         // 유클리드 거리
+    normDiff: number;     // 정규화된 유클리드 거리 (0 ~ 1)
+    euclidScore: number;  // 유클리드 점수 (0 ~ 100)
+    mixed: number;        // 혼합 점수 (0 ~ 100)
+    mixedScore: number;   // 혼합 점수 (0 ~ 100, 반올림 및 클램프)
+}
+
+export function CalculateSimilarity(P1: number[], P2: number[]): SimilarityResult | null {
   const n = P1.length;
 
   if (n !== P2.length || n === 0) {
-    return 0;
+    return null;
   }
 
   // 내적과 노름
@@ -365,7 +375,7 @@ export function CalculateSimilarity(P1: number[], P2: number[]): number {
   const mag2 = Math.sqrt(sum2);
 
   if (mag1 === 0 || mag2 === 0) {
-    return 0;
+    return null;
   }
 
   // 1) 코사인 유사도 (클램프)
@@ -387,14 +397,24 @@ export function CalculateSimilarity(P1: number[], P2: number[]): number {
 
   // 4) ε 허용 + 반올림
   const eps = 1e-4;
+  let mixedScore = 0
   if (1 - cosine < eps && normDiff < eps) {
-    return 100;
+    mixedScore = 100;
+  }
+  else{
+    mixedScore = Math.max(0, Math.min(100, Math.round(mixed * 1000) / 1000))
   }
   
-  console.log("cosine: ", cosine, cosineScore);
-  console.log("euclid: ", diff, normDiff, euclidScore);
-  console.log("mixed: ", mixed);
-  return Math.max(0, Math.min(100, Math.round(mixed * 1000) / 1000));
+  
+  return {
+    "cosine": cosine,
+    "cosineScore": cosineScore,
+    "diff": diff,
+    "normDiff": normDiff,
+    "euclidScore": euclidScore,
+    "mixed": mixed,
+    "mixedScore": mixedScore
+  };
 }
 
 /*

@@ -32,7 +32,7 @@ export default function WebcamDetector() {
   };
 
   return (
-    <div className="w-full space-y-4">
+    <div className='w-full space-y-4'>
       <WebcamCanvas
         videoRef={videoRef}
         isActive={isActive}
@@ -42,7 +42,7 @@ export default function WebcamDetector() {
 
       <AngleDisplayCard
         angles={webcam.angles}
-        similarity={CalculateSimilarity(P1, P2)}
+        similarity={CalculateSimilarity(P1, P2)?.mixedScore || 0}
       />
 
       <WebcamControls

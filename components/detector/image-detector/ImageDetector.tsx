@@ -98,7 +98,7 @@ export default function ImageDetector({ imageLabel = 1 }: ImageDetectorProps) {
 
       <AngleDisplayCard
         angles={image.angles}
-        similarity={CalculateSimilarity(P1, P2)}
+        similarity={CalculateSimilarity(P1, P2)?.mixedScore || 0}
       />
 
       <ImageControls
