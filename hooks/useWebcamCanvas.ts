@@ -48,7 +48,7 @@ export function useWebcamCanvas({
   const animationRef = useRef<number>(0);
   const lastFrameTime = useRef<number>(0);
 
-  const { webcam, setWebcamData, setPreviousAngles, video } = usePoseStore();
+  const { webcam, setWebcamData, setPreviousAngles } = usePoseStore();
 
   // 포즈 감지 루프
   const detectLoop = useCallback(() => {

@@ -390,7 +390,10 @@ export function CalculateSimilarity(P1: number[], P2: number[]): number {
   if (1 - cosine < eps && normDiff < eps) {
     return 100;
   }
-
+  
+  console.log("cosine: ", cosine, cosineScore);
+  console.log("euclid: ", diff, normDiff, euclidScore);
+  console.log("mixed: ", mixed);
   return Math.max(0, Math.min(100, Math.round(mixed * 1000) / 1000));
 }
 

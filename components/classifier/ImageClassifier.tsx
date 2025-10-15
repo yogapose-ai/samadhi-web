@@ -10,6 +10,7 @@ interface ImageClassifierProps {
 
 export function ImageClassifier({ angles }: ImageClassifierProps) {
   const [poseName, setPoseName] = useState<string | null>(null);
+  const [distPerPoseRes, setDistPerPoseRes] = useState<Record<string, number> | null>(null);
 
   // 좌우 반전된 각도 데이터 생성 함수
   const normalizeMirroredAngles = (angles: JointAngles): JointAngles => {
@@ -40,6 +41,7 @@ export function ImageClassifier({ angles }: ImageClassifierProps) {
   const classifyPose = (angles: JointAngles) => {
     let bestPose = "";
     let minDistance = Infinity;
+    const distPerPose: Record<string, number> = {};
 
     // 좌우 반전 버전 생성
     const mirroredAngles = normalizeMirroredAngles(angles);
@@ -78,25 +80,40 @@ export function ImageClassifier({ angles }: ImageClassifierProps) {
         minDistance = minForThisPose;
         bestPose = name;
       }
+      
+      distPerPose[name] = minForThisPose;
     }
 
-    return bestPose;
+    return {bestPose, distPerPose};
   };
 
   useEffect(() => {
     if (angles) {
       const result = classifyPose(angles);
-      setPoseName(result);
+      setPoseName(result.bestPose);
+      setDistPerPoseRes(result.distPerPose);
     } else {
       setPoseName(null);
+      setDistPerPoseRes(null);
     }
   }, [angles]);
 
   if (!poseName) return null;
 
-  return (
+  return (<>
     <div className="p-3 bg-green-50 border border-green-200 rounded-lg text-green-700">
       감지된 자세: <strong>{poseName}</strong>
     </div>
+    <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-blue-700 max-h-60 overflow-y-auto">
+        자세 유사도:
+        <ul className="list-disc list-inside">
+          {distPerPoseRes && Object.entries(distPerPoseRes).map(([name, dist]) => (
+            <li key={name}>
+              {name}: {(1 - dist).toFixed(2)}
+            </li>
+          ))}
+        </ul>
+    </div>
+  </>
   );
 }

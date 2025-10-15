@@ -9,6 +9,7 @@ interface ImageControlsProps {
   isInitialized: boolean;
   imageLoaded: boolean;
   fileInputRef: React.RefObject<HTMLInputElement | null>;
+  fileInputId: string;
   sampleImages: Array<{ name: string; path: string }>;
   onSampleSelect: (path: string) => void;
   currentImageSrc: string | null;
@@ -20,6 +21,7 @@ export function ImageControls({
   isInitialized,
   imageLoaded,
   fileInputRef,
+  fileInputId,
   sampleImages,
   onSampleSelect,
   currentImageSrc,
@@ -40,7 +42,7 @@ export function ImageControls({
           </h4>
 
           <label
-            htmlFor='image-upload'
+            htmlFor={fileInputId}
             className='cursor-pointer w-full flex justify-center'
           >
             <Button
@@ -56,7 +58,7 @@ export function ImageControls({
               </div>
             </Button>
             <Input
-              id='image-upload'
+              id={fileInputId}
               type='file'
               accept='image/*'
               onChange={onFileChange}
@@ -79,13 +81,13 @@ export function ImageControls({
           </h4>
           <div
             className='flex gap-2 justify-start overflow-x-auto pb-1 px-3'
-            style={{ scrollbarWidth: "none" }}
+            style={{ scrollbarWidth: 'none' }}
           >
             {sampleImages.map((img) => (
               <Button
                 key={img.path}
                 onClick={() => onSampleSelect(img.path)}
-                variant={currentImageSrc === img.path ? "default" : "outline"}
+                variant={currentImageSrc === img.path ? 'default' : 'outline'}
                 size='sm'
                 className='h-auto py-2 px-3 text-sm whitespace-nowrap flex-shrink-0'
                 disabled={!isInitialized}

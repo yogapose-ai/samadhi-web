@@ -7,23 +7,38 @@ import { ImageControls } from "./ui/ImageControls";
 import { ImageCanvas } from "./ui/ImageCanvas";
 import { AngleDisplayCard } from "../AngleDisplayCard";
 import { ImageClassifier } from "@/components/classifier/ImageClassifier";
+import { CalculateSimilarity } from '@/lib/medaipipe/angle-calculator';
 
 // 샘플 이미지 목록 (public/images 폴더)
 const SAMPLE_IMAGES = [
   {
-    name: "Tree",
-    path: "/images/tree_pose.png",
+    name: 'Tree',
+    path: '/images/tree_pose.png',
   },
 ];
 
-export default function ImageDetector() {
+interface ImageDetectorProps {
+  imageLabel?: number; // 이미지 번호
+}
+
+export default function ImageDetector({ imageLabel = 1 }: ImageDetectorProps) {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { imageLandmarker, isInitialized } = useMediaPipe();
-  const { image, resetImage } = usePoseStore();
+  // 각 인스턴스마다 고유한 ID 생성
+  const fileInputId = `image-upload-${imageLabel}`;
 
-  const isRevocableUrl = (src: string) => src && src.startsWith("blob:");
+  const { imageLandmarker, isInitialized } = useMediaPipe();
+  const { image1, image2, resetImage1, resetImage2 } = usePoseStore();
+
+  // imageLabel에 따라 해당하는 이미지 데이터와 리셋 함수를 선택
+  const image = imageLabel === 1 ? image1 : image2;
+  const resetImage = imageLabel === 1 ? resetImage1 : resetImage2;
+
+  const P1 = image1.vectorized;
+  const P2 = image2.vectorized;
+
+  const isRevocableUrl = (src: string) => src && src.startsWith('blob:');
 
   const handleFileChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +62,7 @@ export default function ImageDetector() {
       }
       setImageSrc(path);
       if (fileInputRef.current) {
-        fileInputRef.current.value = "";
+        fileInputRef.current.value = '';
       }
     },
     [imageSrc]
@@ -60,7 +75,7 @@ export default function ImageDetector() {
     setImageSrc(null);
     resetImage();
     if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+      fileInputRef.current.value = '';
     }
   }, [imageSrc, resetImage]);
 
@@ -73,14 +88,18 @@ export default function ImageDetector() {
   }, [imageSrc]);
 
   return (
-    <div className="w-full space-y-4">
+    <div className='w-full space-y-4'>
       <ImageCanvas
+        imageLabel={imageLabel}
         imageSrc={imageSrc}
         isInitialized={isInitialized}
         landmarker={imageLandmarker}
       />
 
-      <AngleDisplayCard angles={image.angles} showSimilarity={false} />
+      <AngleDisplayCard
+        angles={image.angles}
+        similarity={CalculateSimilarity(P1, P2)}
+      />
 
       <ImageControls
         onFileChange={handleFileChange}
@@ -88,18 +107,12 @@ export default function ImageDetector() {
         isInitialized={isInitialized}
         imageLoaded={!!imageSrc}
         fileInputRef={fileInputRef}
+        fileInputId={fileInputId}
         sampleImages={SAMPLE_IMAGES}
         onSampleSelect={handleSampleSelect}
         currentImageSrc={imageSrc}
       />
 
-      <ImageCanvas
-        imageSrc={imageSrc}
-        isInitialized={isInitialized}
-        landmarker={imageLandmarker}
-      />
-
-      <AngleDisplayCard angles={image.angles} showSimilarity={false} />
       <ImageClassifier angles={image.angles} />
     </div>
   );

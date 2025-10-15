@@ -143,6 +143,120 @@ export const poseDatabase = {
     "leftAnkle": 168,
     "rightAnkle": 165.9,
     "neckAngle": 75.35
-  }
-
+  },
+  
+  surya_namaskar_standing: {
+    "leftElbow": 0,
+    "rightElbow": 150.5,
+    "leftShoulder": 0,
+    "rightShoulder": 155.7,
+    "leftKnee": 0,
+    "rightKnee": 176.3,
+    "leftHip": 0,
+    "rightHip": 167.6,
+    "spine": 0,
+    "leftHipShoulderAlign": 86.5,
+    "rightHipShoulderAlign": 104.8,
+    "leftWrist": 0,
+    "rightWrist": 157.5,
+    "leftAnkle": 0,
+    "rightAnkle": 170,
+    "neckAngle": 108.2
+  },
+  
+  surya_namaskar_forward_bend: {
+    "leftElbow": 0,
+    "rightElbow": 111.1,
+    "leftShoulder": 0,
+    "rightShoulder": 110.6,
+    "leftKnee": 0,
+    "rightKnee": 139.7,
+    "leftHip": 0,
+    "rightHip": 3.8,
+    "spine": 0,
+    "leftHipShoulderAlign": 91.9,
+    "rightHipShoulderAlign": 101.1,
+    "leftWrist": 0,
+    "rightWrist": 126.7,
+    "leftAnkle": 0,
+    "rightAnkle": 166.8,
+    "neckAngle": 89.5
+  },
+  
+  surya_namaskar_plank: {
+    "leftElbow": 0,
+    "rightElbow": 159.7,
+    "leftShoulder": 0,
+    "rightShoulder": 86.3,
+    "leftKnee": 0,
+    "rightKnee": 174.7,
+    "leftHip": 0,
+    "rightHip": 139.8,
+    "spine": 0,
+    "leftHipShoulderAlign": 92.9,
+    "rightHipShoulderAlign": 101.3,
+    "leftWrist": 0,
+    "rightWrist": 107.6,
+    "leftAnkle": 0,
+    "rightAnkle": 167.1,
+    "neckAngle": 103.6
+  },
+  
+  surya_namaskar_chaturanga: {
+    "leftElbow": 0,
+    "rightElbow": 91.4,
+    "leftShoulder": 0,
+    "rightShoulder": 32.9,
+    "leftKnee": 0,
+    "rightKnee": 140,
+    "leftHip": 0,
+    "rightHip": 137.3,
+    "spine": 0,
+    "leftHipShoulderAlign": 98.4,
+    "rightHipShoulderAlign": 96.7,
+    "leftWrist": 0,
+    "rightWrist": 93.4,
+    "leftAnkle": 0,
+    "rightAnkle": 175.1,
+    "neckAngle": 114.9
+  },
+  
+  surya_namaskar_updog: {
+    "leftElbow": 165.6,
+    "rightElbow": 0,
+    "leftShoulder": 37.7,
+    "rightShoulder": 0,
+    "leftKnee": 162.2,
+    "rightKnee": 0,
+    "leftHip": 142.9,
+    "rightHip": 0,
+    "spine": 0,
+    "leftHipShoulderAlign": 101.9,
+    "rightHipShoulderAlign": 90.7,
+    "leftWrist": 115,
+    "rightWrist": 0,
+    "leftAnkle": 168.2,
+    "rightAnkle": 0,
+    "neckAngle": 126.9
+  },
+  
+  // 같은 자세인 downdog으로 대체
+//   surya_namaskar_mountain: {
+//     "leftElbow": 0,
+//     "rightElbow": 134.9,
+//     "leftShoulder": 0,
+//     "rightShoulder": 151.7,
+//     "leftKnee": 0,
+//     "rightKnee": 173.2,
+//     "leftHip": 0,
+//     "rightHip": 78,
+//     "spine": 0,
+//     "leftHipShoulderAlign": 89.9,
+//     "rightHipShoulderAlign": 94.3,
+//     "leftWrist": 0,
+//     "rightWrist": 134.5,
+//     "leftAnkle": 0,
+//     "rightAnkle": 157.8,
+//     "neckAngle": 120.1
+//   },
 };
