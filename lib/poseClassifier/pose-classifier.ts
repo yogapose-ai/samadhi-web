@@ -1,7 +1,7 @@
 import { JointAngles } from "@/types/pose";
 import { poseDatabase } from "@/types/poseData";
 
-export default function classifyPose(angles: JointAngles) {
+export function classifyPose(angles: JointAngles) {
     let bestPose = "";
     let minDistance = Infinity;
     const distPerPose: Record<string, number> = {};
@@ -51,7 +51,7 @@ export default function classifyPose(angles: JointAngles) {
   };
   
 // 좌우 반전된 각도 데이터 생성 함수
-const normalizeMirroredAngles = (angles: JointAngles): JointAngles => {
+export const normalizeMirroredAngles = (angles: JointAngles): JointAngles => {
     const swapped: Partial<JointAngles> = { ...angles };
 
     // 좌우 대칭 쌍 정의

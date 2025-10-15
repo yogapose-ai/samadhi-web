@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { JointAngles } from "@/types/pose";
-import { poseDatabase } from "@/types/poseData"; // 미리 저장된 자세 데이터
-import classifyPose from '@/lib/poseClassifier/pose-classifier';
+import { classifyPose } from '@/lib/poseClassifier/pose-classifier';
 
 interface ImageClassifierProps {
   angles: JointAngles | null;
