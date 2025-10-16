@@ -1,5 +1,5 @@
+import { CalculateCosAndEuc, calculateAllAngles, CosAndEuc, vectorize, CosAndEucEmpty } from '@/lib/medaipipe/angle-calculator';
 import { PoseLandmarker } from "@mediapipe/tasks-vision";
-import { calculateAllAngles, CalculateSimilarity, SimilarityResult, vectorize } from "../medaipipe/angle-calculator";
 import { classifyPose } from "../poseClassifier/pose-classifier";
 import { JointAngles } from "@/types/pose";
 
@@ -78,13 +78,11 @@ export type ImagePair = {
 }
 
 interface ImageComparatorInput {
-    lambda: number;
     imageList: ImagePair[];
     imageLandmarker: PoseLandmarker;
     onProgress?: (processed: number) => void;
 }
-
-export interface ImageComparatorOutput {
+export interface PoseAndSimilarityResult {
     image1: {
       poseAnswer: string;
       poseResult: string;
@@ -103,16 +101,15 @@ export interface ImageComparatorOutput {
       angles: JointAngles;
       distPerPose: Record<string, number>;
     };
-    similarity_original: SimilarityResult | null;
-    similarity_flipped: SimilarityResult | null;
-    similarity: SimilarityResult | null;
+    similarity_original: CosAndEuc;
+    similarity_flipped: CosAndEuc;
     isSameAnswer: number;
-    isSameResult: number;
 }
 
 // 이미지 쌍에 대해 포즈 분류 및 유사도 계산
-export const calculatePoseAndSimilarity = async ({lambda, imageList, imageLandmarker, onProgress}: ImageComparatorInput) => {
+export const calculatePoseAndSimilarity = async ({imageList, imageLandmarker, onProgress}: ImageComparatorInput) => {
     const result = [];
+    const error_images = new Set<string>();
     for (let i = 0; i < imageList.length; i++) {
       const image1 = await createImageFromPath(imageList[i].image1.path);
       const image2 = await createImageFromPath(imageList[i].image2.path);
@@ -122,7 +119,11 @@ export const calculatePoseAndSimilarity = async ({lambda, imageList, imageLandma
       const result2 = await calculateAngleAndVectorized(image2, imageLandmarker);
       const result2_flipped = await calculateAngleAndVectorized(image2_flipped, imageLandmarker);
 
-      if (!result1 || !result2 || !result2_flipped) continue;
+      if (!result1 || !result2 || !result2_flipped) {
+        if (!result1) error_images.add(imageList[i].image1.path);
+        if (!result2) error_images.add(imageList[i].image2.path);
+        continue;
+      }
 
       // pose classification
       const poseResult1 = classifyPose(result1.angles);
@@ -130,21 +131,15 @@ export const calculatePoseAndSimilarity = async ({lambda, imageList, imageLandma
       const poseResult2_flipped = classifyPose(result2_flipped.angles);
 
       // similarity calculation
-      const similarity_original = CalculateSimilarity(
+      const similarity_original = CalculateCosAndEuc(
         result1.vectorized,
-        result2.vectorized
-      );
-      const similarity_flipped = CalculateSimilarity(
+        result2.vectorized,
+      ) ?? CosAndEucEmpty;
+      const similarity_flipped = CalculateCosAndEuc(
         result1.vectorized,
-        result2_flipped.vectorized
-      );
-      const similarity =
-        (similarity_original?.mixedScore || 0) >
-        (similarity_flipped?.mixedScore || 0)
-          ? similarity_original
-          : similarity_flipped;
-          
-      const isSameResult = (similarity?.mixedScore ?? 0) > lambda ? 1 : 0;
+        result2_flipped.vectorized,
+      ) ?? CosAndEucEmpty;
+      
       result.push({
         image1: {
           poseAnswer: imageList[i].image1.poseAnswer,
@@ -166,12 +161,12 @@ export const calculatePoseAndSimilarity = async ({lambda, imageList, imageLandma
         },
         similarity_original: similarity_original,
         similarity_flipped: similarity_flipped,
-        similarity: similarity,
         isSameAnswer: imageList[i].isSame,
-        isSameResult: isSameResult,
       });
         onProgress?.(i + 1);
     }
+    
+    console.log('Error images:', Array.from(error_images));
 
     return result;
   };

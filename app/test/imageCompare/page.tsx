@@ -1,4 +1,4 @@
-import ImageComparator from '@/components/detector/image-detector/ImageComparator';
+import ImageComparator from '@/components/detector/image-comparator/ImageComparator';
 
 export default function ImagePoseComparePage() {
   return (

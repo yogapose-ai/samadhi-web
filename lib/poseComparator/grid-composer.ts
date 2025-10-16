@@ -1,4 +1,4 @@
-import { ImageComparatorOutput } from "./pose-comparator";
+import { PoseAndSimilarityResult } from "./pose-comparator";
 
 // 결과를 테이블(평탄화) 행으로 변환
 export type ImageComparatorFlatRow = {
@@ -6,24 +6,24 @@ export type ImageComparatorFlatRow = {
     image1PoseResult: string;
     image2PoseAnswer: string;
     image2PoseResult: string;
-    cosine: number;
-    euclid: number; // diff
-    mixed: number; // mixedScore
+    cosine_original: number;
+    euclid_original: number;
+    cosine_flipped: number;
+    euclid_flipped: number;
     isSameAnswer: number;
-    isSameResult: number;
 };
   
-export const toFlatRows = (results: ImageComparatorOutput[]): ImageComparatorFlatRow[] => {
+export const toFlatRows = (results: PoseAndSimilarityResult[]): ImageComparatorFlatRow[] => {
     return results.map(r => ({
       image1PoseAnswer: r.image1.poseAnswer,
       image1PoseResult: r.image1.poseResult,
       image2PoseAnswer: r.image2.poseAnswer,
       image2PoseResult: r.image2.poseResult,
-      cosine: r.similarity?.cosine ?? 0,
-      euclid: r.similarity?.diff ?? 0,
-      mixed: r.similarity?.mixedScore ?? 0,
+      cosine_original: r.similarity_original.cosine,
+      euclid_original: r.similarity_original.diff,
+        cosine_flipped: r.similarity_flipped.cosine,
+        euclid_flipped: r.similarity_flipped.diff,
       isSameAnswer: r.isSameAnswer,
-      isSameResult: r.isSameResult,
     }));
 };
   
@@ -34,9 +34,10 @@ export const toCSV = (rows: ImageComparatorFlatRow[]): string => {
       'image1PoseResult',
       'image2PoseAnswer',
       'image2PoseResult',
-      'cosine',
-      'euclid',
-      'mixed',
+      'cosine_original',
+      'euclid_original',
+      'cosine_flipped',
+        'euclid_flipped',
       'isSameAnswer',
       'isSameResult',
     ];
@@ -54,11 +55,11 @@ export const toCSV = (rows: ImageComparatorFlatRow[]): string => {
         escape(row.image1PoseResult),
         escape(row.image2PoseAnswer),
         escape(row.image2PoseResult),
-        row.cosine,
-        row.euclid,
-        row.mixed,
+        row.cosine_original,
+        row.euclid_original,
+        row.cosine_flipped,
+        row.euclid_flipped,
         row.isSameAnswer,
-        row.isSameResult,
       ].join(','));
     }
     return lines.join('\n');
@@ -77,12 +78,12 @@ export const saveBlob = (content: string, mime: string, filename: string) => {
     URL.revokeObjectURL(url);
 };
   
-export const saveAsCSV = (results: ImageComparatorOutput[], filename = 'pose-compare.csv') => {
+export const saveAsCSV = (results: PoseAndSimilarityResult[], filename = 'pose-compare.csv') => {
     const csv = toCSV(toFlatRows(results));
     saveBlob(csv, 'text/csv', filename);
 };
   
-export const saveAsJSON = (results: ImageComparatorOutput[], filename = 'pose-compare.json') => {
+export const saveAsJSON = (results: PoseAndSimilarityResult[], filename = 'pose-compare.json') => {
     const json = JSON.stringify(results, null, 2);
     saveBlob(json, 'application/json', filename);
 };
