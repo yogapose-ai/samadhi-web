@@ -47,7 +47,7 @@ export function ImageClassifier({ angles }: ImageClassifierProps) {
     for (const [name, poseAngles] of Object.entries(poseDatabase)) {
       const calcDistance = (a: JointAngles) => {
         const keys = Object.keys(a) as (keyof JointAngles)[];
-        
+
         // dot product, magnitude of a and poseAngles
         const { dot, magA, magB } = keys.reduce(
           (acc, key) => {
@@ -58,11 +58,11 @@ export function ImageClassifier({ angles }: ImageClassifierProps) {
             acc.magB += valB * valB;
             return acc;
           },
-          { dot: 0, magA: 0, magB: 0 }
+          { dot: 0, magA: 0, magB: 0 },
         );
 
         const similarity = dot / (Math.sqrt(magA) * Math.sqrt(magB));
-        
+
         // 1에 가까울수록 다름, 0에 가까울수록 유사
         return 1 - similarity;
       };
@@ -90,6 +90,7 @@ export function ImageClassifier({ angles }: ImageClassifierProps) {
     } else {
       setPoseName(null);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [angles]);
 
   if (!poseName) return null;

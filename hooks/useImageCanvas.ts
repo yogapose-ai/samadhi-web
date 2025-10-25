@@ -10,7 +10,7 @@ import type { JointAngles, Landmark } from "@/types/pose";
 
 const drawSkeleton = (
   ctx: CanvasRenderingContext2D,
-  landmarks: NormalizedLandmark[]
+  landmarks: NormalizedLandmark[],
 ) => {
   const drawingUtils = new DrawingUtils(ctx);
 
@@ -74,9 +74,9 @@ export function useImageCanvas({
           const angles = calculateAllAngles(
             worldLandmarks,
             image.previousAngles,
-            (angles: JointAngles) => setPreviousAngles("image", angles)
+            (angles: JointAngles) => setPreviousAngles("image", angles),
           );
-          setImageData(landmarks as Landmark[], angles, fps);
+          setImageData(landmarks as Landmark[], angles, fps, []);
         }
       } else {
         ctx.fillStyle = "#FF0000";
@@ -102,11 +102,13 @@ export function useImageCanvas({
             rightAnkle: 0,
             neckAngle: 0,
           },
-          0
+          0,
+          [],
         );
       }
     },
-    [isInitialized, landmarker, setImageData]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isInitialized, landmarker, setImageData],
   );
 
   return { canvasRef, imageRef, processImage };

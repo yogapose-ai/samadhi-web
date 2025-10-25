@@ -25,18 +25,18 @@ export function WebcamCanvas({
   });
 
   return (
-    <div className='bg-black rounded-lg overflow-hidden aspect-video relative'>
+    <div className="bg-black rounded-lg overflow-hidden aspect-video relative">
       <video
         ref={videoRef}
-        className='absolute inset-0 w-full h-full object-contain opacity-50'
+        className="absolute inset-0 w-full h-full object-contain opacity-50"
         playsInline
         muted
       />
-      <canvas ref={canvasRef} className='w-full h-full object-contain' />
+      <canvas ref={canvasRef} className="w-full h-full object-contain" />
       {!isActive && (
-        <div className='absolute inset-0 flex items-center justify-center'>
-          <div className='text-center text-gray-400'>
-            <CameraOff className='w-16 h-16 mx-auto mb-4 opacity-50' />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center text-gray-400">
+            <CameraOff className="w-16 h-16 mx-auto mb-4 opacity-50" />
             <p>카메라를 시작하세요</p>
           </div>
         </div>

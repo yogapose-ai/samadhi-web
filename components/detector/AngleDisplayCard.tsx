@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ActivitySquare, Activity, Gauge, ChartNetwork } from "lucide-react";
+import { Activity, Gauge, ChartNetwork } from "lucide-react";
 import { JointAngles } from "@/types/pose";
 import { useEffect, useRef } from "react";
 

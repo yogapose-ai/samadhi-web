@@ -18,33 +18,33 @@ export function WebcamControls({
   onStop,
 }: WebcamControlsProps) {
   return (
-    <div className='flex items-center gap-3'>
+    <div className="flex items-center gap-3">
       <Button
         onClick={onStart}
         disabled={isActive || !isInitialized}
-        size='lg'
-        className='gap-2'
+        size="lg"
+        className="gap-2"
       >
-        <Camera className='w-4 h-4' />
+        <Camera className="w-4 h-4" />
         Start Webcam
       </Button>
 
       <Button
         onClick={onStop}
         disabled={!isActive}
-        variant='destructive'
-        size='lg'
-        className='gap-2'
+        variant="destructive"
+        size="lg"
+        className="gap-2"
       >
-        <CameraOff className='w-4 h-4' />
+        <CameraOff className="w-4 h-4" />
         Stop
       </Button>
 
       {!isInitialized && (
-        <Badge variant='secondary'>MediaPipe 초기화 중...</Badge>
+        <Badge variant="secondary">MediaPipe 초기화 중...</Badge>
       )}
 
-      {webcamFps > 0 && <Badge variant='outline'>{webcamFps} FPS</Badge>}
+      {webcamFps > 0 && <Badge variant="outline">{webcamFps} FPS</Badge>}
     </div>
   );
 }

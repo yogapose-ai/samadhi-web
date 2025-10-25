@@ -37,7 +37,7 @@ export default function ImageDetector() {
         resetImage();
       }
     },
-    [imageSrc, resetImage]
+    [imageSrc, resetImage],
   );
 
   const handleSampleSelect = useCallback(
@@ -50,7 +50,7 @@ export default function ImageDetector() {
         fileInputRef.current.value = "";
       }
     },
-    [imageSrc]
+    [imageSrc],
   );
 
   const handleReset = useCallback(() => {
@@ -93,13 +93,6 @@ export default function ImageDetector() {
         currentImageSrc={imageSrc}
       />
 
-      <ImageCanvas
-        imageSrc={imageSrc}
-        isInitialized={isInitialized}
-        landmarker={imageLandmarker}
-      />
-
-      <AngleDisplayCard angles={image.angles} showSimilarity={false} />
       <ImageClassifier angles={image.angles} />
     </div>
   );

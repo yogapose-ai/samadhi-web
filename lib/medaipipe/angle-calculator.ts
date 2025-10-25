@@ -39,7 +39,7 @@ const DEAD_ZONE = 2.0; // 2도 이하 변화는 무시
 function calculateAngle3D(
   a: Landmark,
   b: Landmark,
-  c: Landmark
+  c: Landmark,
 ): number | null {
   if (
     (a.visibility || 0) < MIN_VISIBILITY ||
@@ -80,7 +80,7 @@ function applyDeadZone(
   key: keyof JointAngles,
   newAngle: number,
   previousAngles: Partial<JointAngles>,
-  updatePreviousAngles: (key: keyof JointAngles, angle: number) => void
+  updatePreviousAngles: (key: keyof JointAngles, angle: number) => void,
 ): number {
   const prevAngle = previousAngles[key];
 
@@ -110,7 +110,7 @@ function calcAngle(
   b: Landmark,
   c: Landmark,
   prevAngles: Partial<JointAngles>,
-  updatePrevAngles: (key: keyof JointAngles, angle: number) => void
+  updatePrevAngles: (key: keyof JointAngles, angle: number) => void,
 ): number {
   const angle = calculateAngle3D(a, b, c);
 
@@ -140,7 +140,7 @@ function getMidpoint(a: Landmark, b: Landmark): Landmark {
 export function calculateAllAngles(
   landmarks: Landmark[],
   currentPreviousAngles: Partial<JointAngles>,
-  setAllPreviousAngles: (angles: JointAngles) => void
+  setAllPreviousAngles: (angles: JointAngles) => void,
 ): JointAngles {
   if (landmarks.length < 33) {
     throw new Error("Invalid landmarks: expected 33 points");
@@ -156,15 +156,15 @@ export function calculateAllAngles(
 
   const centerShoulder = getMidpoint(
     landmarks[LANDMARK_INDICES.LEFT_SHOULDER],
-    landmarks[LANDMARK_INDICES.RIGHT_SHOULDER]
+    landmarks[LANDMARK_INDICES.RIGHT_SHOULDER],
   );
   const centerHip = getMidpoint(
     landmarks[LANDMARK_INDICES.LEFT_HIP],
-    landmarks[LANDMARK_INDICES.RIGHT_HIP]
+    landmarks[LANDMARK_INDICES.RIGHT_HIP],
   );
   const centerKnee = getMidpoint(
     landmarks[LANDMARK_INDICES.LEFT_KNEE],
-    landmarks[LANDMARK_INDICES.RIGHT_KNEE]
+    landmarks[LANDMARK_INDICES.RIGHT_KNEE],
   );
 
   /*------------ 팔 ------------*/
@@ -175,7 +175,7 @@ export function calculateAllAngles(
     landmarks[LANDMARK_INDICES.LEFT_ELBOW],
     landmarks[LANDMARK_INDICES.LEFT_WRIST],
     tempPreviousAngles,
-    updatePrevious
+    updatePrevious,
   );
 
   // 오른쪽 팔꿈치: 어깨(12) - 팔꿈치(14) - 손목(16)
@@ -185,7 +185,7 @@ export function calculateAllAngles(
     landmarks[LANDMARK_INDICES.RIGHT_ELBOW],
     landmarks[LANDMARK_INDICES.RIGHT_WRIST],
     tempPreviousAngles,
-    updatePrevious
+    updatePrevious,
   );
 
   // 왼쪽 어깨: 팔꿈치(13) - 어깨(11) - 골반(23)
@@ -195,7 +195,7 @@ export function calculateAllAngles(
     landmarks[LANDMARK_INDICES.LEFT_SHOULDER],
     landmarks[LANDMARK_INDICES.LEFT_HIP],
     tempPreviousAngles,
-    updatePrevious
+    updatePrevious,
   );
 
   // 오른쪽 어깨: 팔꿈치(14) - 어깨(12) - 엉덩이(24)
@@ -205,7 +205,7 @@ export function calculateAllAngles(
     landmarks[LANDMARK_INDICES.RIGHT_SHOULDER],
     landmarks[LANDMARK_INDICES.RIGHT_HIP],
     tempPreviousAngles,
-    updatePrevious
+    updatePrevious,
   );
 
   /*------------ 다리 ------------*/
@@ -216,7 +216,7 @@ export function calculateAllAngles(
     landmarks[LANDMARK_INDICES.LEFT_KNEE],
     landmarks[LANDMARK_INDICES.LEFT_ANKLE],
     tempPreviousAngles,
-    updatePrevious
+    updatePrevious,
   );
 
   // 오른쪽 무릎: 엉덩이(24) - 무릎(26) - 발목(28)
@@ -226,7 +226,7 @@ export function calculateAllAngles(
     landmarks[LANDMARK_INDICES.RIGHT_KNEE],
     landmarks[LANDMARK_INDICES.RIGHT_ANKLE],
     tempPreviousAngles,
-    updatePrevious
+    updatePrevious,
   );
 
   // 왼쪽 엉덩이: 어깨(11) - 엉덩이(23) - 무릎(25)
@@ -236,7 +236,7 @@ export function calculateAllAngles(
     landmarks[LANDMARK_INDICES.LEFT_HIP],
     landmarks[LANDMARK_INDICES.LEFT_KNEE],
     tempPreviousAngles,
-    updatePrevious
+    updatePrevious,
   );
 
   // 오른쪽 엉덩이: 어깨(12) - 엉덩이(24) - 무릎(26)
@@ -246,7 +246,7 @@ export function calculateAllAngles(
     landmarks[LANDMARK_INDICES.RIGHT_HIP],
     landmarks[LANDMARK_INDICES.RIGHT_KNEE],
     tempPreviousAngles,
-    updatePrevious
+    updatePrevious,
   );
 
   /*------------ 몸통 ------------*/
@@ -257,7 +257,7 @@ export function calculateAllAngles(
     centerHip,
     centerKnee,
     tempPreviousAngles,
-    updatePrevious
+    updatePrevious,
   );
 
   // 왼쪽 정렬: 어깨(11) - 엉덩이(23) - 오른쪽 엉덩이(24)
@@ -267,7 +267,7 @@ export function calculateAllAngles(
     landmarks[LANDMARK_INDICES.LEFT_HIP],
     landmarks[LANDMARK_INDICES.RIGHT_HIP],
     tempPreviousAngles,
-    updatePrevious
+    updatePrevious,
   );
 
   // 오른쪽 정렬: 어깨(12) - 엉덩이(24) - 왼쪽 엉덩이(23)
@@ -277,7 +277,7 @@ export function calculateAllAngles(
     landmarks[LANDMARK_INDICES.RIGHT_HIP],
     landmarks[LANDMARK_INDICES.LEFT_HIP],
     tempPreviousAngles,
-    updatePrevious
+    updatePrevious,
   );
 
   /*------------ 손목 ------------*/
@@ -288,7 +288,7 @@ export function calculateAllAngles(
     landmarks[LANDMARK_INDICES.LEFT_WRIST],
     landmarks[LANDMARK_INDICES.LEFT_INDEX],
     tempPreviousAngles,
-    updatePrevious
+    updatePrevious,
   );
 
   // 오른쪽 손목: 팔꿈치(14) - 손목(16) - 손가락(20)
@@ -298,7 +298,7 @@ export function calculateAllAngles(
     landmarks[LANDMARK_INDICES.RIGHT_WRIST],
     landmarks[LANDMARK_INDICES.RIGHT_INDEX],
     tempPreviousAngles,
-    updatePrevious
+    updatePrevious,
   );
 
   /*------------ 발목 ------------*/
@@ -309,7 +309,7 @@ export function calculateAllAngles(
     landmarks[LANDMARK_INDICES.LEFT_ANKLE],
     landmarks[LANDMARK_INDICES.LEFT_HEEL],
     tempPreviousAngles,
-    updatePrevious
+    updatePrevious,
   );
 
   // 오른쪽 발목: 무릎(26) - 발목(28) - 발뒤꿈치(30)
@@ -319,7 +319,7 @@ export function calculateAllAngles(
     landmarks[LANDMARK_INDICES.RIGHT_ANKLE],
     landmarks[LANDMARK_INDICES.RIGHT_HEEL],
     tempPreviousAngles,
-    updatePrevious
+    updatePrevious,
   );
 
   /*------------ 머리 위치 ------------*/
@@ -330,7 +330,7 @@ export function calculateAllAngles(
     landmarks[LANDMARK_INDICES.LEFT_EAR],
     landmarks[LANDMARK_INDICES.NOSE],
     tempPreviousAngles,
-    updatePrevious
+    updatePrevious,
   );
   setAllPreviousAngles(tempPreviousAngles);
 
@@ -459,7 +459,7 @@ export function calcJitter(poseLandmarks: Landmark[][]) {
  * @param landmarksA 전처리하기 전 3D 관절 좌표 시퀀스
  */
 export function getJitter3D(landmarksA: Landmark[][]) {
-  const jitterA = calcJitter(landmarksA); //전처리 전
+  // const jitterA = calcJitter(landmarksA); //전처리 전
 
   const landmarksB: Landmark[][] = []; //전처리 후 좌표값
   //각 시퀀스에 대해 전처리 수행
@@ -509,16 +509,16 @@ export function getJitter3D(landmarksA: Landmark[][]) {
     landmarksB.push(finalData);
   }
 
-  const jitterB = calcJitter(landmarksB); //전처리 후 jitter 계산
+  // const jitterB = calcJitter(landmarksB); //전처리 후 jitter 계산
 
-  console.log("(전처리 전)", jitterA);
-  console.log("(전처리 후)", jitterB);
+  // console.log("(전처리 전)", jitterA);
+  // console.log("(전처리 후)", jitterB);
 }
 
 export function vectorize(
   landmarks: Landmark[],
   height: number,
-  width: number
+  width: number,
 ) {
   //픽셀 값 확인
   // console.log('height: ', height);

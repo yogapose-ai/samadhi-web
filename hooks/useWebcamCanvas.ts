@@ -5,7 +5,10 @@ import {
   NormalizedLandmark,
   PoseLandmarker,
 } from "@mediapipe/tasks-vision";
-import { calculateAllAngles, getJitter3D, vectorize } from "@/lib/medaipipe/angle-calculator";
+import {
+  calculateAllAngles,
+  vectorize,
+} from "@/lib/medaipipe/angle-calculator";
 import { usePoseStore } from "@/store/poseStore";
 import { JointAngles } from "@/types/pose";
 
@@ -19,7 +22,7 @@ interface UseWebcamCanvasProps {
 // 스켈레톤 그리기
 const drawSkeleton = (
   ctx: CanvasRenderingContext2D,
-  landmarks: NormalizedLandmark[]
+  landmarks: NormalizedLandmark[],
 ) => {
   const drawingUtils = new DrawingUtils(ctx);
 
@@ -48,7 +51,7 @@ export function useWebcamCanvas({
   const animationRef = useRef<number>(0);
   const lastFrameTime = useRef<number>(0);
 
-  const { webcam, setWebcamData, setPreviousAngles, video } = usePoseStore();
+  const { webcam, setWebcamData, setPreviousAngles } = usePoseStore();
 
   // 포즈 감지 루프
   const detectLoop = useCallback(() => {
@@ -84,10 +87,10 @@ export function useWebcamCanvas({
         const landmarks = results.landmarks[0];
         const worldLandmarks = results.worldLandmarks?.[0];
 
-        // 👉 전처리 전, 후 jitter 값 비교를 위한 코드 
+        // 👉 전처리 전, 후 jitter 값 비교를 위한 코드
         // (콘솔창에 찍어 확인하므로 실제 서비스시에는 주석 처리 필요)
         const elapsed = (Date.now() - startTime) / 1000;
-        if(elapsed >= 10) {
+        if (elapsed >= 10) {
           // getJitter3D(sequenceData);
         } else {
           sequenceData.push(landmarks);
@@ -104,7 +107,7 @@ export function useWebcamCanvas({
           const angles = calculateAllAngles(
             worldLandmarks,
             webcam.previousAngles,
-            (angles: JointAngles) => setPreviousAngles("webcam", angles)
+            (angles: JointAngles) => setPreviousAngles("webcam", angles),
           );
 
           // FPS 계산
@@ -132,7 +135,7 @@ export function useWebcamCanvas({
           ctx.fillText(
             "포즈가 감지되지 않았습니다. 전신을 보여주세요!",
             20,
-            40
+            40,
           );
         }
       } else {
@@ -146,6 +149,7 @@ export function useWebcamCanvas({
     if (isActive) {
       animationRef.current = requestAnimationFrame(detectLoop);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isActive, landmarker, setWebcamData, videoRef]);
 
   useEffect(() => {
@@ -159,6 +163,7 @@ export function useWebcamCanvas({
         cancelAnimationFrame(animationRef.current);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isActive, isInitialized]);
 
   return { canvasRef };

@@ -37,7 +37,7 @@ export function useVideo(): UseVideoReturn {
       setCurrentTime(videoRef.current?.currentTime || 0);
     };
 
-    console.log(`✅ Video loaded: ${name}`);
+    // console.log(`✅ Video loaded: ${name}`);
   }, []);
 
   // 재생
