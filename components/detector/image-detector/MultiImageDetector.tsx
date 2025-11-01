@@ -4,7 +4,7 @@ import { useState, useCallback, useRef } from "react";
 import { useMediaPipe } from "@/hooks/useMediaPipe";
 import { ImageControls } from "./ui/ImageControls";
 import { calculateAllAngles } from "@/lib/medaipipe/angle-calculator";
-import type { JointAngles } from "@/types/pose.types";
+import { JointAngles } from "@/types";
 
 // 샘플 이미지 목록 (public/images 폴더)
 const SAMPLE_IMAGES = [
@@ -23,8 +23,7 @@ export default function ImageMultiDetector() {
   const handleFilesChange = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
       const files = e.target.files;
-      if (!files || !isInitialized || !imageLandmarker) 
-        ;
+      if (!files || !isInitialized || !imageLandmarker) return;
 
       const newResults: JointAngles[] = [];
 
@@ -44,7 +43,7 @@ export default function ImageMultiDetector() {
             const angles = calculateAllAngles(
               worldLandmarks,
               {},
-              (_: JointAngles) => {},
+              (angles: JointAngles) => {},
             );
             newResults.push(angles);
           }
@@ -94,8 +93,9 @@ export default function ImageMultiDetector() {
         isInitialized={isInitialized}
         imageLoaded={results.length > 0}
         fileInputRef={fileInputRef}
+        fileInputId={"image-upload"}
         sampleImages={SAMPLE_IMAGES}
-        onSampleSelect={(_: string) => {
+        onSampleSelect={(path: string) => {
           alert(
             "샘플 이미지는 다중 이미지 처리에서 작동하지 않습니다.\n이미지 업로드 파일 버튼을 이용해주세요.",
           );
