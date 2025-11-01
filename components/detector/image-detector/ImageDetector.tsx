@@ -52,7 +52,7 @@ export default function ImageDetector({ imageLabel = 1 }: ImageDetectorProps) {
         resetImage();
       }
     },
-    [imageSrc, resetImage]
+    [imageSrc, resetImage],
   );
 
   const handleSampleSelect = useCallback(
@@ -65,7 +65,7 @@ export default function ImageDetector({ imageLabel = 1 }: ImageDetectorProps) {
         fileInputRef.current.value = '';
       }
     },
-    [imageSrc]
+    [imageSrc],
   );
 
   const handleReset = useCallback(() => {

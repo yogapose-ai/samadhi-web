@@ -2,8 +2,7 @@
 
 import { useImageCanvas } from "@/hooks/useImageCanvas";
 import { PoseLandmarker } from "@mediapipe/tasks-vision";
-
-import { Image } from "lucide-react";
+import { Image as ImageIcon } from "lucide-react";
 import { useEffect } from "react";
 
 interface ImageCanvasProps {
@@ -38,24 +37,24 @@ export function ImageCanvas({
   }, [imageRef, imageSrc, isInitialized, landmarker, processImage]);
 
   return (
-    <div className='relative border border-dashed border-gray-300 rounded-lg w-full'>
+    <div className="relative border border-dashed border-gray-300 rounded-lg w-full">
       <img
         ref={imageRef}
         src={imageSrc || undefined}
-        alt='Uploaded Pose'
-        className='hidden'
-        crossOrigin='anonymous'
+        alt="Uploaded Pose"
+        className="hidden"
+        crossOrigin="anonymous"
       />
       <canvas
         ref={canvasRef}
-        className='block max-w-full h-auto rounded-lg'
-        style={{ display: imageSrc ? 'block' : 'none' }}
+        className="block max-w-full h-auto rounded-lg"
+        style={{ display: imageSrc ? "block" : "none" }}
       />
 
       {!imageSrc && (
-        <div className='w-full min-h-64 flex items-center justify-center'>
-          <div className='text-center text-gray-400 p-10'>
-            <Image className='w-16 h-16 mx-auto mb-4 opacity-50' />
+        <div className="w-full min-h-64 flex items-center justify-center">
+          <div className="text-center text-gray-400 p-10">
+            <ImageIcon className="w-16 h-16 mx-auto mb-4 opacity-50" />
             <p>감지할 이미지를 선택하세요</p>
           </div>
         </div>

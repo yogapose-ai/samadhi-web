@@ -20,6 +20,22 @@ const eslintConfig = [
       "next-env.d.ts",
     ],
   },
+  {
+    rules: {
+      indent: ["error", 2, { SwitchCase: 1 }],
+      "no-console": ["error", { allow: ["warn", "error"] }],
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+        },
+      ],
+      "@next/next/no-img-element": "off",
+    },
+  },
+  ...compat.extends("prettier"),
 ];
 
 export default eslintConfig;

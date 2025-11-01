@@ -7,7 +7,10 @@ import {
   PoseLandmarker,
 } from "@mediapipe/tasks-vision";
 import { Video } from "lucide-react";
-import { calculateAllAngles, vectorize } from "@/lib/medaipipe/angle-calculator";
+import {
+  calculateAllAngles,
+  vectorize,
+} from "@/lib/medaipipe/angle-calculator";
 import { usePoseStore } from "@/store/poseStore";
 import { JointAngles } from "@/types/pose";
 
@@ -43,6 +46,7 @@ export function VideoCanvas({
         cancelAnimationFrame(animationRef.current);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoRef, animationRef, isPlaying, isInitialized, landmarker]);
 
   // 포즈 감지 루프
@@ -75,14 +79,18 @@ export function VideoCanvas({
         const landmarks = results.landmarks[0];
         const worldLandmarks = results.worldLandmarks?.[0];
 
-        const data = vectorize(landmarks, videoElement.videoHeight, videoElement.videoWidth);
+        const data = vectorize(
+          landmarks,
+          videoElement.videoHeight,
+          videoElement.videoWidth,
+        );
 
         if (worldLandmarks) {
           // 각도 계산
           const angles = calculateAllAngles(
             worldLandmarks,
             video.previousAngles,
-            (angles: JointAngles) => setPreviousAngles("video", angles)
+            (angles: JointAngles) => setPreviousAngles("video", angles),
           );
 
           // FPS 계산
@@ -117,7 +125,7 @@ export function VideoCanvas({
   // 스켈레톤 그리기
   const drawSkeleton = (
     ctx: CanvasRenderingContext2D,
-    landmarks: NormalizedLandmark[]
+    landmarks: NormalizedLandmark[],
   ) => {
     const drawingUtils = new DrawingUtils(ctx);
 
@@ -134,25 +142,25 @@ export function VideoCanvas({
   };
 
   return (
-    <div className='bg-black rounded-lg overflow-hidden aspect-video relative'>
+    <div className="bg-black rounded-lg overflow-hidden aspect-video relative">
       {/* 원본 비디오 (숨김) */}
       <video
         ref={videoRef}
-        className='absolute inset-0 w-full h-full object-contain opacity-0'
+        className="absolute inset-0 w-full h-full object-contain opacity-0"
         playsInline
       />
 
       {/* 결과 캔버스 */}
       <canvas
         ref={canvasRef}
-        className='w-full h-full object-contain'
+        className="w-full h-full object-contain"
         style={{ display: selectedVideo ? "block" : "none" }}
       />
 
       {!selectedVideo && (
-        <div className='absolute inset-0 flex items-center justify-center'>
-          <div className='text-center text-gray-400'>
-            <Video className='w-16 h-16 mx-auto mb-4 opacity-50' />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center text-gray-400">
+            <Video className="w-16 h-16 mx-auto mb-4 opacity-50" />
             <p>감지할 비디오를 선택하세요</p>
           </div>
         </div>

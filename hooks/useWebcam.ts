@@ -19,11 +19,11 @@ export function useWebcam() {
       streamRef.current = stream;
       setIsActive(true);
       setError(null);
-      console.log("✅ Webcam started");
-    } catch (err) {
+      // console.log("✅ Webcam started");
+    } catch {
       const message = "웹캠 접근 실패. 권한을 확인해주세요.";
       setError(message);
-      console.error("❌ Webcam error:", err);
+      // console.error("❌ Webcam error:", err);
     }
   }, []);
 
@@ -32,7 +32,7 @@ export function useWebcam() {
       streamRef.current.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
       setIsActive(false);
-      console.log("⏸️  Webcam stopped");
+      // console.log("⏸️  Webcam stopped");
     }
   }, []);
 

@@ -47,7 +47,7 @@ export default function VideoDetector() {
     (path: string, name: string) => {
       loadVideo(path, name);
     },
-    [loadVideo]
+    [loadVideo],
   );
 
   // 시간 이동
@@ -55,7 +55,7 @@ export default function VideoDetector() {
     (value: number[]) => {
       seekTo(value[0]);
     },
-    [seekTo]
+    [seekTo],
   );
 
   // 10초 앞으로

@@ -10,7 +10,7 @@ import type { JointAngles, Landmark } from "@/types/pose";
 
 const drawSkeleton = (
   ctx: CanvasRenderingContext2D,
-  landmarks: NormalizedLandmark[]
+  landmarks: NormalizedLandmark[],
 ) => {
   const drawingUtils = new DrawingUtils(ctx);
 
@@ -112,11 +112,12 @@ export function useImageCanvas({
             neckAngle: 0,
           },
           0,
-          []
+          [],
         );
       }
     },
-    [isInitialized, landmarker, setImageData]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isInitialized, landmarker, setImageData],
   );
 
   return { canvasRef, imageRef, processImage };

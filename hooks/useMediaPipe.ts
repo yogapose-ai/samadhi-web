@@ -12,7 +12,7 @@ export function useMediaPipe() {
     async function initMediaPipe() {
       try {
         const vision = await FilesetResolver.forVisionTasks(
-          "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
+          "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm",
         );
 
         const options = {
@@ -40,12 +40,12 @@ export function useMediaPipe() {
         liveLandmarkerRef.current = liveLandmarker;
         imageLandmarkerRef.current = imageLandmarker;
         setIsInitialized(true);
-        console.log("✅ MediaPipe initialized");
+        // console.log("✅ MediaPipe initialized");
       } catch (err) {
         const message =
           err instanceof Error ? err.message : "Failed to initialize";
         setError(message);
-        console.error("❌ MediaPipe error:", err);
+        // console.error("❌ MediaPipe error:", err);
       }
     }
 
