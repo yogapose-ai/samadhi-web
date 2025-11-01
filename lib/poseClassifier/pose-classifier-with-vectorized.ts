@@ -4,9 +4,9 @@ import { poseVectorizedData } from "@/types/poseVectorizedData";
 
 export function classifyPoseWithVectorized(vectorized: number[]) {
     let bestPose = "unknown";
-    let maxDistance = Infinity;
+    let maxDistance = 0;
     const distPerPose: Record<string, number> = {};
-    const THRESHOLD = 90;
+    const THRESHOLD = 80;
 
     // 좌우 반전 버전 생성
     // const mirroredAngles = normalizeMirroredAngles(angles);
@@ -14,7 +14,7 @@ export function classifyPoseWithVectorized(vectorized: number[]) {
 
     for (const [name, poseVectorized] of Object.entries(poseVectorizedData)) {
       const calcDistance = (a: number[]) => {
-        const similarity = CalculateSimilarity(poseVectorized, a);
+        const similarity = CalculateSimilarity(poseVectorized, a, 1);
         
         // 1에 가까울수록 다름, 0에 가까울수록 유사
         return similarity;
@@ -35,7 +35,8 @@ export function classifyPoseWithVectorized(vectorized: number[]) {
       distPerPose[name] = maxForThisPose;
     }
     
-    console.log("distPerPose:", distPerPose);
+    // console.log("distPerPose:", distPerPose);
+    // console.log("Best Pose:", bestPose)
 
     return {bestPose, distPerPose};
   };

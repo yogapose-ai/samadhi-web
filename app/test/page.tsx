@@ -2,6 +2,7 @@ import DetectorCard from "./components/DetectorCard";
 import WebcamDetector from "@/components/detector/webcam-detector/WebcamDetector";
 import ImageDetector from "@/components/detector/image-detector/ImageDetector";
 import VideoDetector from "@/components/detector/video-detector/VideoDetector";
+import TimelineClipper from "@/components/timeline/timeline-clipper";
 
 export default function DetectorTestPage() {
   return (
@@ -23,19 +24,15 @@ export default function DetectorTestPage() {
           </DetectorCard>
 
           <DetectorCard
-            title="이미지"
-            linkHref="/test/image"
-            linkText="이미지 테스트"
-          >
-            <ImageDetector />
-          </DetectorCard>
-
-          <DetectorCard
             title="비디오"
             linkHref="/test/video"
             linkText="비디오 테스트"
           >
             <VideoDetector />
+          </DetectorCard>
+
+          <DetectorCard title="타임라인" linkHref="" linkText="작동 x">
+            <TimelineClipper />
           </DetectorCard>
         </div>
       </div>

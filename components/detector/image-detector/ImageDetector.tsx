@@ -113,7 +113,7 @@ export default function ImageDetector({ imageLabel = 1 }: ImageDetectorProps) {
         currentImageSrc={imageSrc}
       />
 
-      <ImageClassifier poseClass={image.poseClass} />
+      <ImageClassifier angles={image.angles} />
     </div>
   );
 }
