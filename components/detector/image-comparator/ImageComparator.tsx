@@ -19,6 +19,8 @@ import {
   ThresholdAccuracy,
 } from '@/lib/poseComparator/accuracy-calculator';
 import AccuracyPerLambdaDisplay from './ui/AccuracyPerLambdaDisplay';
+import { Input } from '@/components/ui/input';
+import { BestAccuracyDisplay } from './ui/BestAccuracyDisplay';
 
 const SAMPLE_IMAGES = [
   {
@@ -45,9 +47,11 @@ export default function ImageComparator() {
     Map<number, ThresholdAccuracy[]>
   >(new Map());
   const [processedCount, setProcessedCount] = useState<number>(0);
+  const [inputlambda, setInputLambda] = useState<number>(1.0);
+  const [inputThreshold, setInputThreshold] = useState<number>(100);
 
   const lambdas = [0.0, 0.2, 0.4, 0.6, 0.8, 1.0];
-  const datasetUrl = '/dataset/dataset_downdog.json';
+  const datasetUrl = '/dataset/dataset_test_balanced_12000.json';
 
   useEffect(() => {
     // public 폴더의 파일은 절대 경로로 바로 fetch 할 수 있습니다.
@@ -118,7 +122,12 @@ export default function ImageComparator() {
             <Button
               size='sm'
               variant='outline'
-              onClick={() => saveAsCSV(poseAndSimilarityResult)}
+              onClick={() =>
+                saveAsCSV(
+                  poseAndSimilarityResult,
+                  accuracyPerLambda.get(inputlambda)![inputThreshold]
+                )
+              }
             >
               CSV 저장
             </Button>
@@ -130,13 +139,40 @@ export default function ImageComparator() {
               JSON 저장
             </Button>
           </div>
-
           {/* 람다별 정확도 분석 결과 */}
           <AccuracyPerLambdaDisplay
             lambdas={lambdas}
             accuracyPerLambda={accuracyPerLambda}
           />
-
+          <h3 className='text-lg font-semibold'>특정 람다 & 임계값 결과</h3>
+          람다 선택
+          <Input
+            type='number'
+            value={inputlambda}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setInputLambda(parseFloat(e.target.value))
+            }
+            step='0.2'
+            min='0'
+            max='1'
+            className='w-20 border rounded px-2 py-1'
+          />
+          임계값 선택
+          <Input
+            type='number'
+            value={inputThreshold}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setInputThreshold(parseInt(e.target.value))
+            }
+            step='1'
+            min='0'
+            max='100'
+            className='w-20 border rounded px-2 py-1'
+          />
+          <BestAccuracyDisplay
+            lambda={inputlambda}
+            bestThreshold={accuracyPerLambda.get(inputlambda)![inputThreshold]}
+          />
           {/* 상세 결과 테이블 */}
           {/* <div className='space-y-4'>
             <h3 className='text-lg font-semibold'>상세 결과</h3>
@@ -161,7 +197,10 @@ export default function ImageComparator() {
                   </tr>
                 </thead>
                 <tbody>
-                  {toFlatRows(poseAndSimilarityResult).map((row, idx) => (
+                  {toFlatRows(
+                    poseAndSimilarityResult,
+                    accuracyPerLambda.get(inputlambda)![inputThreshold]
+                  ).map((row, idx) => (
                     <tr key={idx} className='odd:bg-white even:bg-gray-50'>
                       <td className='px-3 py-2 border'>
                         {row.image1PoseAnswer}

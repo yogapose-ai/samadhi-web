@@ -6,9 +6,20 @@ import {
   LinearScale,
   PointElement,
   LineElement,
+  Tooltip,
+  Legend,
+  Title,
 } from 'chart.js';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Tooltip,
+  Legend,
+  Title
+);
 // 정확도 그래프 컴포넌트
 export const AccuracyChart = ({
   thresholdAccuracies,

@@ -1,3 +1,4 @@
+import { ThresholdAccuracy } from '@/lib/poseComparator/accuracy-calculator';
 import { PoseAndSimilarityResult } from "./pose-comparator";
 
 // 결과를 테이블(평탄화) 행으로 변환
@@ -13,7 +14,7 @@ export type ImageComparatorFlatRow = {
     isSameAnswer: number;
 };
   
-export const toFlatRows = (results: PoseAndSimilarityResult[]): ImageComparatorFlatRow[] => {
+export const toFlatRows = (results: PoseAndSimilarityResult[], thresholdAccuracy: ThresholdAccuracy): ImageComparatorFlatRow[] => {
     return results.map(r => ({
       image1PoseAnswer: r.image1.poseAnswer,
       image1PoseResult: r.image1.poseResult,
@@ -78,8 +79,8 @@ export const saveBlob = (content: string, mime: string, filename: string) => {
     URL.revokeObjectURL(url);
 };
   
-export const saveAsCSV = (results: PoseAndSimilarityResult[], filename = 'pose-compare.csv') => {
-    const csv = toCSV(toFlatRows(results));
+export const saveAsCSV = (results: PoseAndSimilarityResult[], thresholdAccuracy: ThresholdAccuracy, filename = 'pose-compare.csv') => {
+    const csv = toCSV(toFlatRows(results, thresholdAccuracy));
     saveBlob(csv, 'text/csv', filename);
 };
   

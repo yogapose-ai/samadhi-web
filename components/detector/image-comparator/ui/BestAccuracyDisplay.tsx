@@ -10,12 +10,13 @@ export const BestAccuracyDisplay = ({
   bestThreshold: ThresholdAccuracy;
 }) => {
   const total =
-    bestThreshold.confusionMatrix.tp +
-    bestThreshold.confusionMatrix.tn +
-    bestThreshold.confusionMatrix.fp +
-    bestThreshold.confusionMatrix.fn;
+    (bestThreshold.confusionMatrix?.tp || 0) +
+    (bestThreshold.confusionMatrix?.tn || 0) +
+    (bestThreshold.confusionMatrix?.fp || 0) +
+    (bestThreshold.confusionMatrix?.fn || 0);
   const correct =
-    bestThreshold.confusionMatrix.tp + bestThreshold.confusionMatrix.tn;
+    (bestThreshold.confusionMatrix?.tp || 0) +
+    (bestThreshold.confusionMatrix?.tn || 0);
   return (
     <div className='bg-green-50 border border-green-200 rounded-lg p-4'>
       <h3 className='text-lg font-semibold text-green-800 mb-2'>
@@ -39,19 +40,19 @@ export const BestAccuracyDisplay = ({
         <div>
           <span className='font-semibold'>Precision:</span>
           <span className='ml-2 text-green-600'>
-            {(bestThreshold.precision * 100).toFixed(2)}%
+            {bestThreshold.precision.toFixed(4)}
           </span>
         </div>
         <div>
           <span className='font-semibold'>Recall:</span>
           <span className='ml-2 text-green-600'>
-            {(bestThreshold.recall * 100).toFixed(2)}%
+            {bestThreshold.recall.toFixed(4)}
           </span>
         </div>
         <div>
           <span className='font-semibold'>F1-Score:</span>
           <span className='ml-2 text-green-600'>
-            {(bestThreshold.f1Score * 100).toFixed(2)}%
+            {bestThreshold.f1Score.toFixed(4)}
           </span>
         </div>
       </div>
