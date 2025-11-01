@@ -10,6 +10,7 @@ import {
   LeftOutlined,
   RightOutlined,
 } from "@ant-design/icons";
+import { Bold } from "lucide-react";
 
 const { Text, Title } = Typography;
 
@@ -258,12 +259,12 @@ const BigPanel: React.FC<{
           style={{
             marginTop: 8,
             color: "#667085",
-            fontWeight: 700,
+            // fontWeight: "bold",
             fontSize: FS.time,
           }}
         >
           {seg
-            ? `${toMMSS(seg.startSec)} ~ ${toMMSS(seg.endSec)}`
+            ? `유튜브 시간 : ${toMMSS(seg.startSec)} ~ ${toMMSS(seg.endSec)}`
             : "00:00 ~ 00:00"}
         </div>
       </div>

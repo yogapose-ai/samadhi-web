@@ -5,8 +5,6 @@ import {
   Card,
   Typography,
   Button,
-  Col,
-  Row,
   Slider,
   Empty,
   Spin,
@@ -36,7 +34,7 @@ interface WorkoutRecord {
   duration: number;
   youtubeUrl: string;
   mean: number;
-  segments?: Segment[]; // ← 10개 묶음(옵션)
+  segments?: Segment[];
 }
 interface User {
   id: string;
@@ -55,7 +53,6 @@ type DisplayRecord = WorkoutRecord & {
 };
 
 /* ──────────────────────── 샘플 데이터 ──────────────────────── */
-/** 10개 묶음 생성기 */
 const makeSegments = (seed: number): Segment[] =>
   Array.from({ length: 10 }).map((_, i) => {
     const start = i * 30;
@@ -72,11 +69,10 @@ const makeSegments = (seed: number): Segment[] =>
       startSec: start,
       endSec: end,
       pose: poses[(i + seed) % poses.length],
-      mean: 78 + ((i * 7 + seed) % 15), // 78~92
+      mean: 78 + ((i * 7 + seed) % 15),
     };
   });
 
-/** 한 사람만 segments 보유(최근 2건), 예시 데이터 두 개(=두 기록) */
 const SAMPLE_USER: User = {
   id: "U001",
   name: "홍길동",
@@ -89,16 +85,15 @@ const SAMPLE_USER: User = {
       duration: 90,
       youtubeUrl: "https://www.youtube.com/watch?v=1W9gMxLoW6Q",
       mean: 79.6,
-      segments: makeSegments(2), // ✅ 세그먼트 포함 (10개)
+      segments: makeSegments(2),
     },
     {
       date: "2025-11-01",
       duration: 65,
       youtubeUrl: "https://www.youtube.com/watch?v=OBTl49bVk94",
       mean: 87.4,
-      segments: makeSegments(7), // ✅ 세그먼트 포함 (10개)
+      segments: makeSegments(7),
     },
-    // 이하 기록은 segments 없음
     {
       date: "2025-10-29",
       duration: 45,
@@ -161,12 +156,12 @@ const buttonChrome: React.CSSProperties = {
   background: "#fff",
   border: "1px solid #eee",
   padding: 16,
-  height: "auto",
+  height: "100%",
   whiteSpace: "normal",
-  display: "block",
+  display: "flex", // ✅ 카드 자체를 flex 컨테이너
+  flexDirection: "column", // ✅ 세로 정렬
   transition:
     "box-shadow .25s ease, transform .25s ease, border-color .25s ease",
-  cursor: "default",
 };
 const buttonHover: React.CSSProperties = {
   boxShadow: "0 6px 18px rgba(0,0,0,0.18)",
@@ -210,6 +205,64 @@ const extractYouTubeId = (url: string): string | null => {
 const getThumb = (url: string) => {
   const id = extractYouTubeId(url);
   return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : null;
+};
+
+/* 공통 섹션 */
+type SectionProps = React.PropsWithChildren<{ title: string; first?: boolean }>;
+const Section = ({ title, first, children }: SectionProps) => (
+  <div
+    style={
+      first
+        ? {}
+        : { borderTop: "1px solid #eee", marginTop: 12, paddingTop: 12 }
+    }
+  >
+    <Text strong style={{ fontSize: SECTION_TITLE_FS }}>
+      {title}
+    </Text>
+    <div style={{ marginTop: 10 }}>{children}</div>
+  </div>
+);
+
+/* 16:9 고정 썸네일(카드 하단 고정) */
+const ThumbBox = ({ url }: { url: string }) => {
+  const src = getThumb(url);
+  if (!src) return null;
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+      onClick={(e) => e.stopPropagation()}
+      aria-label="유튜브 영상 보기"
+      style={{ display: "block", textDecoration: "none", marginTop: "auto" }} // ✅ 카드 하단으로
+    >
+      <div
+        style={{
+          border: "1px solid #eee",
+          borderRadius: 8,
+          background: "#fafafa",
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{ position: "relative", width: "100%", paddingTop: "56.25%" }}
+        >
+          <img
+            src={src}
+            alt="YouTube thumbnail"
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
+        </div>
+      </div>
+    </a>
+  );
 };
 
 /* 카드형 컨테이너 */
@@ -315,35 +368,7 @@ const WorkoutDashboard: React.FC = () => {
   const start = (currentPage - 1) * pageSize;
   const pageData = sorted.slice(start, start + pageSize);
 
-  const columnsCount = 4;
-  const pageColumns: DisplayRecord[][] = Array.from(
-    { length: columnsCount },
-    () => [],
-  );
-  pageData.forEach((item, idx) => {
-    pageColumns[idx % columnsCount].push(item);
-  });
-
-  type SectionProps = React.PropsWithChildren<{
-    title: string;
-    first?: boolean;
-  }>;
-  const Section = ({ title, first, children }: SectionProps) => (
-    <div
-      style={
-        first
-          ? {}
-          : { borderTop: "1px solid #eee", marginTop: 12, paddingTop: 12 }
-      }
-    >
-      <Text strong style={{ fontSize: SECTION_TITLE_FS }}>
-        {title}
-      </Text>
-      {children}
-    </div>
-  );
-
-  // ✅ 카드 클릭 → 상세 페이지로 데이터 전달(segments가 있으면 함께 전달)
+  // 상세 페이지 이동
   const gotoDetail = (r: DisplayRecord) => {
     const q = new URLSearchParams({
       id: r.id,
@@ -358,89 +383,42 @@ const WorkoutDashboard: React.FC = () => {
       current: "0",
     });
     if (r.segments && r.segments.length > 0) {
-      q.set("segments", JSON.stringify(r.segments)); // Next.js 라우터가 자동 인코딩
+      q.set("segments", JSON.stringify(r.segments));
     }
     router.push(`/record/detail?${q.toString()}`);
   };
 
-  const renderButtonCard = (r: DisplayRecord) => {
-    const thumb = getThumb(r.youtubeUrl);
-    return (
-      <div key={r.id} style={{ marginBottom: 16 }}>
-        <CardLikeBox onClick={() => gotoDetail(r)}>
-          <Section title="운동 정보" first>
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: 10,
-                marginTop: 10,
-              }}
-            >
-              <Tag style={{ ...pill, background: "#FFF1E6" }}>
-                <span style={labelCss}>날짜 : </span> {r.date}
-              </Tag>
-              <Tag style={{ ...pill, background: "#FFEFEF" }}>
-                <span style={labelCss}>운동시간 : </span> {r.duration}분
-              </Tag>
-              {r.segments && (
-                <Tag style={{ ...pill, background: "#E7F0FF" }}>
-                  세그먼트 <b>&nbsp;{r.segments.length}</b>개
-                </Tag>
-              )}
-            </div>
-          </Section>
+  const renderButtonCard = (r: DisplayRecord) => (
+    <CardLikeBox key={r.id} onClick={() => gotoDetail(r)}>
+      <Section title="운동 정보" first>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+          <Tag style={{ ...pill, background: "#FFF1E6" }}>
+            <span style={labelCss}>날짜 : </span> {r.date}
+          </Tag>
+          <Tag style={{ ...pill, background: "#FFEFEF" }}>
+            <span style={labelCss}>운동시간 : </span> {r.duration}분
+          </Tag>
+          {r.segments && (
+            <Tag style={{ ...pill, background: "#E7F0FF" }}>
+              세그먼트 <b>&nbsp;{r.segments.length}</b>개
+            </Tag>
+          )}
+        </div>
+      </Section>
 
-          <Section title="기록 정보">
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: 10,
-                marginTop: 10,
-              }}
-            >
-              <Tag style={{ ...pill, background: "#E9FFF3" }}>
-                <span style={{ ...labelCss }}>유사도 평균 : </span>{" "}
-                {r.mean.toFixed(1)}%
-              </Tag>
-            </div>
+      <Section title="기록 정보">
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+          <Tag style={{ ...pill, background: "#E9FFF3" }}>
+            <span style={{ ...labelCss }}>유사도 평균 : </span>{" "}
+            {r.mean.toFixed(1)}%
+          </Tag>
+        </div>
+      </Section>
 
-            {thumb && (
-              <a
-                href={r.youtubeUrl}
-                target="_blank"
-                rel="noreferrer"
-                onClick={(e) => e.stopPropagation()}
-                aria-label="유튜브 영상 보기"
-                style={{
-                  display: "block",
-                  marginTop: 12,
-                  textDecoration: "none",
-                  cursor: "pointer",
-                }}
-              >
-                <div
-                  style={{
-                    padding: 8,
-                    border: "1px solid #eee",
-                    borderRadius: 8,
-                    background: "#fafafa",
-                  }}
-                >
-                  <img
-                    src={thumb}
-                    alt="YouTube thumbnail"
-                    style={{ width: "100%", borderRadius: 6, display: "block" }}
-                  />
-                </div>
-              </a>
-            )}
-          </Section>
-        </CardLikeBox>
-      </div>
-    );
-  };
+      {/* 썸네일은 항상 동일 높이(16:9), 카드 하단 */}
+      <ThumbBox url={r.youtubeUrl} />
+    </CardLikeBox>
+  );
 
   return (
     <Layout style={layoutStyle}>
@@ -489,7 +467,6 @@ const WorkoutDashboard: React.FC = () => {
           </Button>
         )}
 
-        {/* 간단 필터들 */}
         {!collapsed && (
           <>
             <Card
@@ -597,13 +574,21 @@ const WorkoutDashboard: React.FC = () => {
               </div>
             ) : (
               <>
-                <Row gutter={16} align="top">
-                  {pageColumns.map((colItems, colIdx) => (
-                    <Col key={colIdx} span={6}>
-                      {colItems.map(renderButtonCard)}
-                    </Col>
+                {/* ✅ CSS Grid로 4열, 같은 행 높이 자동 맞춤 */}
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+                    gap: 16,
+                    alignItems: "stretch",
+                  }}
+                >
+                  {pageData.map((r) => (
+                    <div key={r.id} style={{ height: "100%" }}>
+                      {renderButtonCard(r)}
+                    </div>
                   ))}
-                </Row>
+                </div>
 
                 <div
                   style={{
