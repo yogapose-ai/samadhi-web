@@ -63,6 +63,7 @@ export function ImageControls({
               accept="image/*"
               onChange={onFileChange}
               className="hidden"
+              multiple
               ref={fileInputRef}
               disabled={!isInitialized}
             />
