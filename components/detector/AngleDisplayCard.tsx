@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Activity, Gauge, ChartNetwork } from "lucide-react";
-import { JointAngles } from "@/types/pose";
+import { JointAngles } from "@/types/pose.types";
 import { useEffect, useRef } from "react";
 
 interface AngleDisplayCardProps {

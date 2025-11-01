@@ -6,7 +6,7 @@ import {
 } from "@mediapipe/tasks-vision";
 import { calculateAllAngles, vectorize } from "@/lib/medaipipe/angle-calculator";
 import { usePoseStore } from "@/store/poseStore";
-import type { JointAngles, Landmark } from "@/types/pose";
+import type { JointAngles, Landmark } from "@/types/pose.types";
 
 const drawSkeleton = (
   ctx: CanvasRenderingContext2D,

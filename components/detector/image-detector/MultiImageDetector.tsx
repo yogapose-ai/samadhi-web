@@ -4,7 +4,7 @@ import { useState, useCallback, useRef } from "react";
 import { useMediaPipe } from "@/hooks/useMediaPipe";
 import { ImageControls } from "./ui/ImageControls";
 import { calculateAllAngles } from "@/lib/medaipipe/angle-calculator";
-import type { JointAngles } from "@/types/pose";
+import type { JointAngles } from "@/types/pose.types";
 
 // 샘플 이미지 목록 (public/images 폴더)
 const SAMPLE_IMAGES = [

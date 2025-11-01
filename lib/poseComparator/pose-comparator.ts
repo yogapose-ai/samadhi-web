@@ -1,7 +1,7 @@
 import { CalculateCosAndEuc, calculateAllAngles, CosAndEuc, vectorize, CosAndEucEmpty } from '@/lib/medaipipe/angle-calculator';
 import { PoseLandmarker } from "@mediapipe/tasks-vision";
 import { classifyPose } from "../poseClassifier/pose-classifier";
-import { JointAngles } from "@/types/pose";
+import { JointAngles } from "@/types/pose.types";
 
 // 이미지 경로로부터 HTMLImageElement 생성
 export const createImageFromPath = (path: string): Promise<HTMLImageElement> => {

@@ -12,7 +12,7 @@ import {
   vectorize,
 } from "@/lib/medaipipe/angle-calculator";
 import { usePoseStore } from "@/store/poseStore";
-import { JointAngles } from "@/types/pose";
+import { JointAngles } from "@/types/pose.types";
 
 interface VideoCanvasProps {
   videoRef: React.RefObject<HTMLVideoElement | null>;

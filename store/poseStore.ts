@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { Landmark, JointAngles } from "@/types/pose";
+import type { Landmark, JointAngles } from "@/types/pose.types";
 
 const createSourceState = () => ({
   landmarks: null as Landmark[] | null,

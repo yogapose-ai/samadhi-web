@@ -1,4 +1,4 @@
-import type { Landmark, JointAngles } from "@/types/pose";
+import type { Landmark, JointAngles } from "@/types/pose.types";
 
 // MediaPipe 랜드마크 인덱스 (총 33개 중 각도 계산에 필요한 주요 랜드마크만 정의)
 export const LANDMARK_INDICES = {

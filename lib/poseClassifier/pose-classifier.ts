@@ -1,4 +1,4 @@
-import { JointAngles } from "@/types/pose";
+import { JointAngles } from "@/types/pose.types";
 import { poseDatabase } from "@/types/poseData";
 
 export function classifyPose(angles: JointAngles) {
