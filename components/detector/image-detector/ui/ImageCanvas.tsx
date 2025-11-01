@@ -6,17 +6,20 @@ import { Image as ImageIcon } from "lucide-react";
 import { useEffect } from "react";
 
 interface ImageCanvasProps {
+  imageLabel?: number; // 이미지 번호
   imageSrc: string | null;
   isInitialized: boolean;
   landmarker: PoseLandmarker | null;
 }
 
 export function ImageCanvas({
+  imageLabel = 1, // 이미지 번호
   imageSrc,
   isInitialized,
   landmarker,
 }: ImageCanvasProps) {
   const { canvasRef, imageRef, processImage } = useImageCanvas({
+    imageLabel, // 이미지 번호
     isInitialized,
     landmarker,
   });

@@ -7,7 +7,7 @@ import { WebcamControls } from "./ui/WebcamControls";
 import { AngleDisplayCard } from "../AngleDisplayCard";
 import { useRef } from "react";
 import { WebcamCanvas } from "./ui/WebcamCanvas";
-import { CalculateSimilarity } from "@/lib/medaipipe/angle-calculator";
+import { CalculateSimilarity } from '@/lib/medaipipe/angle-calculator';
 
 export default function WebcamDetector() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -32,7 +32,7 @@ export default function WebcamDetector() {
   };
 
   return (
-    <div className="w-full space-y-4">
+    <div className='w-full space-y-4'>
       <WebcamCanvas
         videoRef={videoRef}
         isActive={isActive}

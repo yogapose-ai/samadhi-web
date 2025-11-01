@@ -337,11 +337,27 @@ export function calculateAllAngles(
   return calculatedAngles;
 }
 
-export function CalculateSimilarity(P1: number[], P2: number[]): number {
-  const n = P1.length;
+export interface CosAndEuc {
+    cosine: number;       // 코사인 유사도 (-1 ~ 1)
+    cosineScore: number;  // 코사인 점수 (0 ~ 100)
+    diff: number;         // 유클리드 거리
+    normDiff: number;     // 정규화된 유클리드 거리 (0 ~ 1)
+    euclidScore: number;  // 유클리드 점수 (0 ~ 100)
+}
+
+export const CosAndEucEmpty: CosAndEuc = {
+    cosine: -1,
+    cosineScore: 0,
+    diff: Infinity,
+    normDiff: 1,
+    euclidScore: 0,
+};
+
+export const CalculateCosAndEuc = (P1: number[], P2: number[], ) : CosAndEuc | null =>  {
+    const n = P1.length;
 
   if (n !== P2.length || n === 0) {
-    return 0;
+    return null;
   }
 
   // 내적과 노름
@@ -365,7 +381,7 @@ export function CalculateSimilarity(P1: number[], P2: number[]): number {
   const mag2 = Math.sqrt(sum2);
 
   if (mag1 === 0 || mag2 === 0) {
-    return 0;
+    return null;
   }
 
   // 1) 코사인 유사도 (클램프)
@@ -381,17 +397,40 @@ export function CalculateSimilarity(P1: number[], P2: number[]): number {
   const diff = Math.sqrt(diffSum);
   const normDiff = diff / (mag1 + mag2 + 1e-12); // 0~1 근사
   const euclidScore = (1 - normDiff) * 100; // 유클리드 점수 -> 크기
-
-  // 3) 혼합 - 일단 임시: 0.7:0.3
-  const mixed = 0.7 * cosineScore + 0.3 * euclidScore;
-
-  // 4) ε 허용 + 반올림
-  const eps = 1e-4;
-  if (1 - cosine < eps && normDiff < eps) {
-    return 100;
+  
+  return {
+    "cosine": cosine,
+    "cosineScore": cosineScore,
+    "diff": diff,
+    "normDiff": normDiff,
+    "euclidScore": euclidScore
   }
+}
 
-  return Math.max(0, Math.min(100, Math.round(mixed * 1000) / 1000));
+export function CalculateMixedScore(cosAndEuc: CosAndEuc | null, lambda: number = 0.7): number {
+    if (!cosAndEuc) return 0;
+    const {cosine, cosineScore, diff, normDiff, euclidScore} = cosAndEuc;
+
+    // 3) 혼합 - 람다 기본값 0.7 (cos 0.7:euc 0.3)
+    if (lambda <0 || lambda >1) return 0;
+    const mixed = lambda * cosineScore + (1-lambda) * euclidScore;
+
+    // 4) ε 허용 + 반올림
+    const eps = 1e-4;
+    let mixedScore = 0
+    if (1 - cosine < eps && normDiff < eps) {
+      mixedScore = 100;
+    }
+    else{
+      mixedScore = Math.max(0, Math.min(100, Math.round(mixed * 1000) / 1000))
+    }
+    
+      return mixedScore;
+}
+
+export function CalculateSimilarity(P1: number[], P2: number[], lambda: number = 0.7): number {
+  const result = CalculateCosAndEuc(P1, P2);
+    return CalculateMixedScore(result, lambda);
 }
 
 /*

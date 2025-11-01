@@ -4,7 +4,7 @@ import {
   NormalizedLandmark,
   PoseLandmarker,
 } from "@mediapipe/tasks-vision";
-import { calculateAllAngles } from "@/lib/medaipipe/angle-calculator";
+import { calculateAllAngles, vectorize } from "@/lib/medaipipe/angle-calculator";
 import { usePoseStore } from "@/store/poseStore";
 import type { JointAngles, Landmark } from "@/types/pose";
 
@@ -29,17 +29,23 @@ const drawSkeleton = (
 };
 
 interface UseImageCanvasProps {
+    imageLabel?: number; // 이미지 번호
   isInitialized: boolean;
   landmarker: PoseLandmarker | null;
 }
 
 export function useImageCanvas({
+  imageLabel = 1, // 이미지 번호
   isInitialized,
   landmarker,
 }: UseImageCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
-  const { image, setImageData, setPreviousAngles } = usePoseStore();
+  //   const { image1: image, setImage1Data: setImageData, setPreviousAngles } = usePoseStore();
+  const { image1, image2, setImage1Data, setImage2Data, setPreviousAngles } = usePoseStore();  
+  // imageLabel에 따라 해당하는 이미지 데이터와 리셋 함수를 선택
+  const image = imageLabel === 1 ? image1 : image2;
+  const setImageData = imageLabel === 1 ? setImage1Data : setImage2Data;
 
   // 단일 이미지 감지 및 렌더링
   const processImage = useCallback(
@@ -67,6 +73,9 @@ export function useImageCanvas({
       if (results.landmarks && results.landmarks.length > 0) {
         const landmarks = results.landmarks[0];
         const worldLandmarks = results.worldLandmarks?.[0];
+        
+        const data = vectorize(landmarks, imageElement.naturalHeight, imageElement.naturalWidth);
+        // console.log(data)
 
         drawSkeleton(ctx, landmarks);
 
@@ -74,9 +83,9 @@ export function useImageCanvas({
           const angles = calculateAllAngles(
             worldLandmarks,
             image.previousAngles,
-            (angles: JointAngles) => setPreviousAngles("image", angles),
+            (angles: JointAngles) => setPreviousAngles(`image${imageLabel==1?1:2}`, angles)
           );
-          setImageData(landmarks as Landmark[], angles, fps, []);
+          setImageData(landmarks as Landmark[], angles, fps, data);
         }
       } else {
         ctx.fillStyle = "#FF0000";

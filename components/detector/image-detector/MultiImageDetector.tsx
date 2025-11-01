@@ -23,7 +23,8 @@ export default function ImageMultiDetector() {
   const handleFilesChange = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
       const files = e.target.files;
-      if (!files || !isInitialized || !imageLandmarker) return;
+      if (!files || !isInitialized || !imageLandmarker) 
+        ;
 
       const newResults: JointAngles[] = [];
 

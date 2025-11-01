@@ -9,6 +9,7 @@ interface ImageControlsProps {
   isInitialized: boolean;
   imageLoaded: boolean;
   fileInputRef: React.RefObject<HTMLInputElement | null>;
+  fileInputId: string;
   sampleImages: Array<{ name: string; path: string }>;
   onSampleSelect: (path: string) => void;
   currentImageSrc: string | null;
@@ -20,6 +21,7 @@ export function ImageControls({
   isInitialized,
   imageLoaded,
   fileInputRef,
+  fileInputId,
   sampleImages,
   onSampleSelect,
   currentImageSrc,
@@ -40,7 +42,7 @@ export function ImageControls({
           </h4>
 
           <label
-            htmlFor="image-upload"
+            htmlFor={fileInputId}
             className="cursor-pointer w-full flex justify-center"
           >
             <Button
@@ -56,7 +58,7 @@ export function ImageControls({
               </div>
             </Button>
             <Input
-              id="image-upload"
+              id={fileInputId}
               type="file"
               accept="image/*"
               onChange={onFileChange}
