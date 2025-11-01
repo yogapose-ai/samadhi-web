@@ -7,6 +7,7 @@ import {
 import { calculateAllAngles, vectorize } from "@/lib/medaipipe/angle-calculator";
 import { usePoseStore } from "@/store/poseStore";
 import type { JointAngles, Landmark } from "@/types/pose.types";
+import { classifyPose } from "@/lib/poseClassifier/pose-classifier";
 
 const drawSkeleton = (
   ctx: CanvasRenderingContext2D,
@@ -75,6 +76,8 @@ export function useImageCanvas({
         const worldLandmarks = results.worldLandmarks?.[0];
         
         const data = vectorize(landmarks, imageElement.naturalHeight, imageElement.naturalWidth);
+        
+        const poseClass = classifyPose(worldLandmarks!).bestPose;
         // console.log(data)
 
         drawSkeleton(ctx, landmarks);

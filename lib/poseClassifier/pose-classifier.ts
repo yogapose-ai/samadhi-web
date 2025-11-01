@@ -2,9 +2,10 @@ import { JointAngles } from "@/types/pose.types";
 import { poseDatabase } from "@/types/poseData";
 
 export function classifyPose(angles: JointAngles) {
-    let bestPose = "";
+    let bestPose = "unknown";
     let minDistance = Infinity;
     const distPerPose: Record<string, number> = {};
+    const THRESHOLD = 0.05;
 
     // 좌우 반전 버전 생성
     const mirroredAngles = normalizeMirroredAngles(angles);
@@ -39,7 +40,7 @@ export function classifyPose(angles: JointAngles) {
       // 더 유사한 쪽 선택
       const minForThisPose = Math.min(distanceOriginal, distanceMirrored);
 
-      if (minForThisPose < minDistance) {
+      if (minForThisPose < THRESHOLD && minForThisPose < minDistance) {
         minDistance = minForThisPose;
         bestPose = name;
       }

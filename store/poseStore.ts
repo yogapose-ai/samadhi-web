@@ -7,6 +7,7 @@ const createSourceState = () => ({
   fps: 0 as number,
   previousAngles: {} as Partial<JointAngles>,
   vectorized: [] as number[],
+  poseClass: "unknown",
 });
 
 interface PoseStore {
@@ -30,13 +31,15 @@ interface PoseStore {
     angles: JointAngles,
     fps: number,
     vectorized: number[],
+    poseClass: string,
   ) => void;
 
   setImage1Data: (
     landmarks: Landmark[],
     angles: JointAngles,
     fps: number,
-    vectorized: number[]
+    vectorized: number[],
+    poseClass: string,
   ) => void;
   
   setImage2Data: (
@@ -44,6 +47,7 @@ interface PoseStore {
     angles: JointAngles,
     fps: number,
     vectorized: number[],
+    poseClass: string,
   ) => void;
 
   setVideoData: (
@@ -51,6 +55,7 @@ interface PoseStore {
     angles: JointAngles,
     fps: number,
     vectorized: number[],
+    poseClass: string,
   ) => void;
 
   resetAllData: () => void;
@@ -87,20 +92,20 @@ export const usePoseStore = create<PoseStore>((set) => ({
       [source]: { ...state[source], previousAngles: angles },
     })),
 
-  setWebcamData: (landmarks, angles, fps, vectorized) =>
+  setWebcamData: (landmarks, angles, fps, vectorized, poseClass) =>
     set((_) => ({
-      webcam: { landmarks, angles, fps, previousAngles: {}, vectorized },
+      webcam: { landmarks, angles, fps, previousAngles: {}, vectorized, poseClass },
     })),
 
-  setImage1Data: (landmarks, angles, fps, vectorized) =>
-    set((state) => ({ image1: { landmarks, angles, fps, previousAngles: {}, vectorized } })),
+  setImage1Data: (landmarks, angles, fps, vectorized, poseClass) =>
+    set((state) => ({ image1: { landmarks, angles, fps, previousAngles: {}, vectorized, poseClass } })),
   
-  setImage2Data: (landmarks, angles, fps, vectorized) =>
-    set((state) => ({ image2: { landmarks, angles, fps, previousAngles: {}, vectorized } })),
+  setImage2Data: (landmarks, angles, fps, vectorized, poseClass) =>
+    set((state) => ({ image2: { landmarks, angles, fps, previousAngles: {}, vectorized, poseClass } })),
 
-  setVideoData: (landmarks, angles, fps, vectorized) =>
+  setVideoData: (landmarks, angles, fps, vectorized, poseClass) =>
     set((_) => ({
-      video: { landmarks, angles, fps, previousAngles: {}, vectorized },
+      video: { landmarks, angles, fps, previousAngles: {}, vectorized, poseClass },
     })),
 
   resetImage1: () => set({ image1: createSourceState() }),

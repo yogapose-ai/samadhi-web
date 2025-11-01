@@ -7,6 +7,7 @@ import { useVideo } from "@/hooks/useVideo";
 import { VideoControls } from "./ui/VideoControls";
 import { VideoCanvas } from "./ui/VideoCanvas";
 import { AngleDisplayCard } from "../AngleDisplayCard";
+import { VideoClassifier } from "@/components/classifier/VideoClassifier";
 
 // 샘플 비디오 목록 (public/videos 폴더)
 const SAMPLE_VIDEOS = [
@@ -96,6 +97,8 @@ export default function VideoDetector() {
         onSeek={handleSeek}
         onSpeedChange={setPlaybackSpeed}
       />
+
+      <VideoClassifier poseClass={video.poseClass} />
     </div>
   );
 }

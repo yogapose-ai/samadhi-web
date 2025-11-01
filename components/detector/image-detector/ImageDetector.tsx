@@ -88,7 +88,7 @@ export default function ImageDetector({ imageLabel = 1 }: ImageDetectorProps) {
   }, [imageSrc]);
 
   return (
-    <div className='w-full space-y-4'>
+    <div className="w-full space-y-4">
       <ImageCanvas
         imageLabel={imageLabel}
         imageSrc={imageSrc}
@@ -113,7 +113,7 @@ export default function ImageDetector({ imageLabel = 1 }: ImageDetectorProps) {
         currentImageSrc={imageSrc}
       />
 
-      <ImageClassifier angles={image.angles} />
+      <ImageClassifier poseClass={image.poseClass} />
     </div>
   );
 }

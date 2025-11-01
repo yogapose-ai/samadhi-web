@@ -11,6 +11,7 @@ import {
 } from "@/lib/medaipipe/angle-calculator";
 import { usePoseStore } from "@/store/poseStore";
 import { JointAngles } from "@/types/pose.types";
+import { classifyPoseWithVectorized } from "@/lib/poseClassifier/pose-classifier-with-vectorized";
 
 interface UseWebcamCanvasProps {
   videoRef: React.RefObject<HTMLVideoElement | null>;
@@ -115,9 +116,12 @@ export function useWebcamCanvas({
             ? Math.round(1000 / (now - lastFrameTime.current))
             : 0;
           lastFrameTime.current = now;
+          
+          // 포즈 분류
+          const poseClass = classifyPoseWithVectorized(data);
 
           // Store에 저장
-          setWebcamData(landmarks, angles, fps, data);
+          setWebcamData(landmarks, angles, fps, data, poseClass.bestPose);
 
           // 스켈레톤 그리기
           drawSkeleton(ctx, landmarks);
